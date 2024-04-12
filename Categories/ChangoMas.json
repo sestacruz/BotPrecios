@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Pan",
+    "url": "https://www.masonline.com.ar/panaderia/salado"
+  },
+  {
+    "name": "Galletitas saladas",
+    "url": "https://www.masonline.com.ar/desayunos-y-meriendas/galletitas-saladas"
+  },
+  {
+    "name": "Galletitas dulces",
+    "url": "https://www.masonline.com.ar/desayunos-y-meriendas/galletitas-dulces"
+  },
+  {
+    "name": "Arroz",
+    "url": "https://www.masonline.com.ar/arroz-legumbres-y-pastas/arroz"
+  },
+  {
+    "name": "Harina de trigo",
+    "url": "https://www.masonline.com.ar/harinas/harina-de-trigo"
+  },
+  {
+    "name": "Harina de maiz",
+    "url": "https://www.masonline.com.ar/harinas/harina-de-maiz"
+  },
+  {
+    "name": "Fideos",
+    "url": "https://www.masonline.com.ar/arroz-legumbres-y-pastas/pastas-secas"
+  },
+  {
+    "name": "Verduras",
+    "url": "https://www.masonline.com.ar/verduras/verduras-frescas"
+  },
+  {
+    "name": "Endulzantes",
+    "url": "https://www.masonline.com.ar/desayunos-y-meriendas/endulzantes"
+  },
+  {
+    "name": "Mermeladas",
+    "url": "https://www.masonline.com.ar/desayunos-y-meriendas/mermeladas-y-untables"
+  },
+  {
+    "name": "Dulces",
+    "url": "https://www.masonline.com.ar/fiambres-y-embutidos/dulces"
+  },
+  {
+    "name": "Legumbres",
+    "url": "https://www.masonline.com.ar/arroz-legumbres-y-pastas/legumbres"
+  },
+  {
+    "name": "Frutas",
+    "url": "https://www.masonline.com.ar/frutas/frutas-frescas"
+  },
+  {
+    "name": "Carnes",
+    "url": "https://www.masonline.com.ar/carniceria/carnes"
+  },
+  {
+    "name": "Fiambres",
+    "url": "https://www.masonline.com.ar/fiambres-y-embutidos/feteados"
+  },
+  {
+    "name": "Huevos",
+    "url": "https://www.masonline.com.ar/huevos"
+  },
+  {
+    "name": "Leche",
+    "url": "https://www.masonline.com.ar/lacteos/leches"
+  },
+  {
+    "name": "Quesos",
+    "url": "https://www.masonline.com.ar/quesos"
+  },
+  {
+    "name": "Yogures",
+    "url": "https://www.masonline.com.ar/lacteos/yogures"
+  },
+  {
+    "name": "Manteca",
+    "url": "https://www.masonline.com.ar/lacteos/mantecas-y-margarinas"
+  },
+  {
+    "name": "Aceites",
+    "url": "https://www.masonline.com.ar/aceites-vinagres-y-aderezos/aceites"
+  },
+  {
+    "name": "Gaseosas",
+    "url": "https://www.masonline.com.ar/gaseosas"
+  },
+  {
+    "name": "Sal",
+    "url": "https://www.masonline.com.ar/condimentos-y-especias/sal-y-pimienta"
+  },
+  {
+    "name": "Especias",
+    "url": "https://www.masonline.com.ar/condimentos-y-especias/especias"
+  },
+  {
+    "name": "Vinage",
+    "url": "https://www.masonline.com.ar/aceites-vinagres-y-aderezos/vinagres-y-aceto"
+  },
+  {
+    "name": "Cafe",
+    "url": "https://www.masonline.com.ar/desayunos-y-meriendas/cafe"
+  },
+  {
+    "name": "Yerba",
+    "url": "https://www.masonline.com.ar/desayunos-y-meriendas/yerbas"
+  }
+]

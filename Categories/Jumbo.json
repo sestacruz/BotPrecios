@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Yerba",
+    "url": "https://www.jumbo.com.ar/almacen/desayuno-y-merienda/yerbas"
+  },
+  {
+    "name": "Panificados",
+    "url": "https://www.jumbo.com.ar/Almacen/Panificados"
+  },
+  {
+    "name": "Galletitas Saladas",
+    "url": "https://www.jumbo.com.ar/almacen/desayuno-y-merienda/galletitas-saladas"
+  },
+  {
+    "name": "Galletitas Dulces",
+    "url": "https://www.jumbo.com.ar/almacen/desayuno-y-merienda/galletitas-dulces"
+  },
+  {
+    "name": "Arroz",
+    "url": "https://www.jumbo.com.ar/almacen/arroz-y-legumbres/arroz"
+  },
+  {
+    "name": "Harinas",
+    "url": "https://www.jumbo.com.ar/almacen/harinas/harinas"
+  },
+  {
+    "name": "Pastas Secas",
+    "url": "https://www.jumbo.com.ar/Almacen/Pastas-Secas-y-Salsas"
+  },
+  {
+    "name": "Verduras",
+    "url": "https://www.jumbo.com.ar/Frutas-y-Verduras/Verduras"
+  },
+  {
+    "name": "Azucar",
+    "url": "https://www.jumbo.com.ar/almacen/desayuno-y-merienda/azucar-y-edulcorantes"
+  },
+  {
+    "name": "Mermeladas",
+    "url": "https://www.jumbo.com.ar/almacen/desayuno-y-merienda/mermeladas-y-jaleas"
+  },
+  {
+    "name": "Dulces",
+    "url": "https://www.jumbo.com.ar/quesos-y-fiambres/dulces"
+  },
+  {
+    "name": "Legumbres",
+    "url": "https://www.jumbo.com.ar/almacen/arroz-y-legumbres/legumbres"
+  },
+  {
+    "name": "Frutas",
+    "url": "https://www.jumbo.com.ar/Frutas-y-Verduras/Frutas"
+  },
+  {
+    "name": "Carne Vacuna",
+    "url": "https://www.jumbo.com.ar/carnes/carne-vacuna"
+  },
+  {
+    "name": "Menudencias",
+    "url": "https://www.jumbo.com.ar/Carnes/Menudencias"
+  },
+  {
+    "name": "Fiambres",
+    "url": "https://www.jumbo.com.ar/Quesos-y-Fiambres/Fiambres"
+  },
+  {
+    "name": "Huevos",
+    "url": "https://www.jumbo.com.ar/frutas-y-verduras/huevos"
+  },
+  {
+    "name": "Leches",
+    "url": "https://www.jumbo.com.ar/Lacteos/Leches"
+  },
+  {
+    "name": "Quesos",
+    "url": "https://www.jumbo.com.ar/Quesos-y-Fiambres/Quesos"
+  },
+  {
+    "name": "Yogures",
+    "url": "https://www.jumbo.com.ar/Lacteos/Yogures"
+  },
+  {
+    "name": "Manteca",
+    "url": "https://www.jumbo.com.ar/lacteos/mantecas-y-margarinas/manteca"
+  },
+  {
+    "name": "Aceites",
+    "url": "https://www.jumbo.com.ar/almacen/aceites-y-vinagres/aceites-comunes"
+  },
+  {
+    "name": "Bebidas",
+    "url": "https://www.jumbo.com.ar/bebidas"
+  },
+  {
+    "name": "Sal",
+    "url": "https://www.jumbo.com.ar/almacen/sal-pimienta-y-especias/sal"
+  },
+  {
+    "name": "Mayonesa",
+    "url": "https://www.jumbo.com.ar/almacen/aderezos/mayonesas"
+  },
+  {
+    "name": "Vinagres",
+    "url": "https://www.jumbo.com.ar/almacen/aceites-y-vinagres/vinagres"
+  },
+  {
+    "name": "Cafe",
+    "url": "https://www.jumbo.com.ar/almacen/desayuno-y-merienda/cafes"
+  }
+]

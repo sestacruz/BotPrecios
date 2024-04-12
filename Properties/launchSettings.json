@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BotPrecios": {
+      "commandName": "Project",
+      "commandLineArgs": "ChangoMas"
+    }
+  }
+}

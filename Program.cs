@@ -1,17 +1,15 @@
-﻿using BotPrecios;
-using BotPrecios.Bots;
+﻿using BotPrecios.Bots;
 using BotPrecios.Model;
-using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.DevTools.V121.Network;
-using System.Text;
-using System.Text.Json.Nodes;
+using System.Net.Http.Headers;
+
 
 string market = string.Empty;
 if (args.Length > 0)
     market = args[0];
 
-ChromeOptions options= new() { BrowserVersion = "123"};
+ChromeOptions options= new() { BrowserVersion = "123" };
+options.AddArgument("--start-maximized");
 
 switch (market)
 {
@@ -23,11 +21,17 @@ switch (market)
         ChangoMas chango = new (options);
         chango.GetProductsData();
         break;
+    case Constants.Carrefour:
+        Carrefour carrefour = new (options);
+        carrefour.GetProductsData();
+        break;
     default:
         Jumbo jumboAll = new (options);
         ChangoMas changoAll = new (options);
+        Carrefour carrefourAll = new (options);
         jumboAll.GetProductsData();
         changoAll.GetProductsData();
+        carrefourAll.GetProductsData();
         break;
 }
 

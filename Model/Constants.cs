@@ -11,5 +11,6 @@ namespace BotPrecios.Model
     {
         internal const string Jumbo = "Jumbo";
         internal const string ChangoMas = "ChangoMas";
+        internal const string Carrefour = "Carrefour";
     }
 }

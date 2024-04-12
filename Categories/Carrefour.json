@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Pan",
+    "url": "https://www.carrefour.com.ar/Panaderia/Elaboracion-carrefour/Especialidades-saladas"
+  },
+  {
+    "name": "Galletitas saladas",
+    "url": "https://www.carrefour.com.ar/Desayuno-y-merienda/Galletitas-bizcochitos-y-tostadas/Galletitas-de-agua"
+  },
+  {
+    "name": "Galletitas dulces",
+    "url": "https://www.carrefour.com.ar/Desayuno-y-merienda/Galletitas-bizcochitos-y-tostadas/Galletitas-dulces"
+  },
+  {
+    "name": "Arroz",
+    "url": "https://www.carrefour.com.ar/Almacen/Arroz-y-legumbres/Arroz"
+  },
+  {
+    "name": "Harina de trigo",
+    "url": "https://www.carrefour.com.ar/Almacen/Harinas/Harinas-comunes-y-leudantes"
+  },
+  {
+    "name": "Harina de maiz",
+    "url": "https://www.carrefour.com.ar/Almacen/Harinas/Polentas"
+  },
+  {
+    "name": "Fideos",
+    "url": "https://www.carrefour.com.ar/Almacen/Pastas-secas"
+  },
+  {
+    "name": "Verduras",
+    "url": "https://www.carrefour.com.ar/Frutas-y-verduras/Verduras"
+  },
+  {
+    "name": "Endulzantes",
+    "url": "https://www.carrefour.com.ar/Desayuno-y-merienda/Azucar-y-endulzantes"
+  },
+  {
+    "name": "Mermeladas",
+    "url": "https://www.carrefour.com.ar/Desayuno-y-merienda/Mermeladas-y-otros-dulces/Mermeladas-dulces-y-jaleas"
+  },
+  {
+    "name": "Dulces",
+    "url": "https://www.carrefour.com.ar/Lacteos-y-productos-frescos/Dulce-de-membrillo-y-otros-dulces"
+  },
+  {
+    "name": "Legumbres",
+    "url": "https://www.carrefour.com.ar/Almacen/Arroz-y-legumbres/Legumbres"
+  },
+  {
+    "name": "Frutas",
+    "url": "https://www.carrefour.com.ar/Frutas-y-verduras/Frutas"
+  },
+  {
+    "name": "Carnes",
+    "url": "https://www.carrefour.com.ar/Carnes-y-pescados/Carne-vacuna"
+  },
+  {
+    "name": "Fiambres",
+    "url": "https://www.carrefour.com.ar/lacteos-y-productos-frescos/fiambres"
+  },
+  {
+    "name": "Huevos",
+    "url": "https://www.carrefour.com.ar/Lacteos-y-productos-frescos/Huevos"
+  },
+  {
+    "name": "Leche",
+    "url": "https://www.carrefour.com.ar/Lacteos-y-productos-frescos/Leches"
+  },
+  {
+    "name": "Quesos",
+    "url": "https://www.carrefour.com.ar/Lacteos-y-productos-frescos/Quesos "
+  },
+  {
+    "name": "Yogures",
+    "url": "https://www.carrefour.com.ar/Lacteos-y-productos-frescos/Yogures"
+  },
+  {
+    "name": "Manteca",
+    "url": "https://www.carrefour.com.ar/Lacteos-y-productos-frescos/Mantecas-margarinas-y-levaduras?order="
+  },
+  {
+    "name": "Aceites",
+    "url": "https://www.carrefour.com.ar/Almacen/Aceites-y-vinagres/Aceites-comunes"
+  },
+  {
+    "name": "Gaseosas",
+    "url": "https://www.carrefour.com.ar/Bebidas/Gaseosas"
+  },
+  {
+    "name": "Sal",
+    "url": "https://www.carrefour.com.ar/Almacen/Sal-aderezos-y-saborizadores/Sal"
+  },
+  {
+    "name": "Especias",
+    "url": "https://www.carrefour.com.ar/Almacen/Sal-aderezos-y-saborizadores/Hierbas-secas-y-especias"
+  },
+  {
+    "name": "Vinage",
+    "url": "https://www.carrefour.com.ar/Almacen/Aceites-y-vinagres/Vinagres-acetos-y-limon"
+  },
+  {
+    "name": "Cafe",
+    "url": "https://www.carrefour.com.ar/Desayuno-y-merienda/Cafe"
+  },
+  {
+    "name": "Yerba",
+    "url": "https://www.carrefour.com.ar/Desayuno-y-merienda/Yerba"
+  }
+]

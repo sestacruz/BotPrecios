@@ -10,6 +10,7 @@ namespace BotPrecios.Model
     public class Product
     {
         private string _price;
+        public string superMarket {  get; set; }
         public string name { get; set; }
         public string category { get; set; }
         public string price 
@@ -20,7 +21,7 @@ namespace BotPrecios.Model
 
         public override string ToString()
         {
-            return $"{name};{category};{price}";
+            return $"{superMarket};{name};{category};{price}";
         }
     }
 }

@@ -15,6 +15,7 @@ namespace BotPrecios.Bots
         private ChromeOptions _co;
         private IWebDriver driver;
         private bool cookiesAccepted = false;
+        private const string _superMarket = Constants.Coto;
 
         public Coto(ChromeOptions co) 
         {
@@ -90,6 +91,7 @@ namespace BotPrecios.Bots
                 {
                     foreach ( var item in productos ) 
                     {
+
                         string name = item.FindElement(By.XPath(".//span[@class='span_productName']/div")).Text;
                         string price = string.Empty;
                         try { price = item.FindElement(By.XPath(".//div/div/div/span/span[@class='atg_store_newPrice']")).Text; }
@@ -98,7 +100,7 @@ namespace BotPrecios.Bots
                             try { price = item.FindElement(By.XPath(".//div[1]/div/div/div[3]/span")).Text; }
                             catch { price = item.FindElement(By.XPath(".//div[1]/div/div/div[2]/span")).Text; }
                         }
-                        products.Add(new Product { name = name, category = category.name, price = price });
+                        products.Add(new Product { superMarket = _superMarket, name = name, category = category.name, price = price });
                     }
                 }
                 catch (Exception ex) 

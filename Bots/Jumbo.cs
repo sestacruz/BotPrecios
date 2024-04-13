@@ -10,6 +10,7 @@ namespace BotPrecios.Bots
     {
         private ChromeOptions _co;
         private IWebDriver driver;
+        private const string _superMarket = Constants.Jumbo;
 
         public Jumbo(ChromeOptions co) 
         {
@@ -72,6 +73,7 @@ namespace BotPrecios.Bots
                 var productos = driver.FindElements(By.ClassName("vtex-search-result-3-x-galleryItem"));
                 products.AddRange(productos.Select(x => new Product 
                 { 
+                    superMarket = _superMarket,
                     name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text, 
                     category = category.name,
                     price = x.FindElement(By.ClassName("jumboargentinaio-store-theme-1dCOMij_MzTzZOCohX1K7w")).Text 

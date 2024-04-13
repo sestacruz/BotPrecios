@@ -13,6 +13,7 @@ namespace BotPrecios.Bots
     {
         private ChromeOptions _co;
         private IWebDriver driver;
+        private const string _superMarket = Constants.ChangoMas;
 
         public ChangoMas(ChromeOptions co) 
         {
@@ -81,11 +82,12 @@ namespace BotPrecios.Bots
 
                 var productos = driver.FindElements(By.ClassName("vtex-search-result-3-x-galleryItem"));
                 products.AddRange(productos.Select(x => new Product 
-                    { 
-                        name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text, 
-                        category = category.name,
-                        price = x.FindElement(By.ClassName("valtech-gdn-dynamic-product-0-x-dynamicProductPrice")).Text 
-                    }).ToList());
+                {
+                    superMarket = _superMarket,
+                    name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text, 
+                    category = category.name,
+                    price = x.FindElement(By.ClassName("valtech-gdn-dynamic-product-0-x-dynamicProductPrice")).Text 
+                }).ToList());
                 actualPage++;
             }
             Console.WriteLine();

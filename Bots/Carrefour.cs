@@ -14,6 +14,7 @@ namespace BotPrecios.Bots
         private ChromeOptions _co;
         private IWebDriver driver;
         private bool cookiesAccepted = false;
+        private const string _superMarket = Constants.Carrefour;
 
         public Carrefour(ChromeOptions co) 
         {
@@ -104,6 +105,7 @@ namespace BotPrecios.Bots
                 {
                     products.AddRange(productos.Select(x => new Product
                     {
+                        superMarket = _superMarket,
                         name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text,
                         category = category.name,
                         price = x.FindElement(By.ClassName("valtech-carrefourar-product-price-0-x-currencyContainer")).Text

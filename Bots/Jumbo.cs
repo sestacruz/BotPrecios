@@ -15,6 +15,7 @@ namespace BotPrecios.Bots
         {
             _co = co;
             driver = new ChromeDriver(_co);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
         }
 
         public void GetProductsData()
@@ -40,9 +41,10 @@ namespace BotPrecios.Bots
         public List<Product> GetProducts(Category category)
         {
             driver.Navigate().GoToUrl(category.url);
-            Thread.Sleep(2000);
 
+            Console.WriteLine();
             Helper.WriteColor($"Buscando productos de la categoria [{category.name}]",ConsoleColor.White);
+            Console.WriteLine();
             int totalPages = driver.FindElements(By.ClassName("discoargentina-search-result-custom-1-x-fetchMoreOptionItem")).Count;
 
             return(GetPagesInfo(category, totalPages));
@@ -51,28 +53,32 @@ namespace BotPrecios.Bots
         private List<Product> GetPagesInfo(Category category, int pageCount)
         {
             List<Product> products = new List<Product>();
-            Console.WriteLine($"Leyendo pagina 1");
-            for (int i = 2; i <= pageCount+1; i++)
+            int actualPage = 1;
+            while (actualPage <= pageCount)
             {
-                int cicles = 0;
-                while (cicles < 4)
+                Helper.PrintProgressBar($"Leyendo pagina {actualPage}/{pageCount}", actualPage, pageCount);
+                //Console.Write($"\rLeyendo pagina {actualPage}/{pageCount}");
+                if (actualPage > 1)
+                {
+                    driver.Navigate().GoToUrl($"{category.url}?page={actualPage}");
+                    Thread.Sleep(1000);
+                }
+                for (int i = 0; i < 4; i++) 
                 {
                     IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-                    js.ExecuteScript("window.scrollBy(0, window.innerHeight)","");
-                    Thread.Sleep(1000);
-                    cicles++;
+                    js.ExecuteScript("window.scrollBy(0, window.innerHeight)", "");
+                    Thread.Sleep(1500);
                 }
                 var productos = driver.FindElements(By.ClassName("vtex-search-result-3-x-galleryItem"));
                 products.AddRange(productos.Select(x => new Product 
-                                                        { 
-                                                            name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text, 
-                                                            category = category.name,
-                                                            price = x.FindElement(By.ClassName("jumboargentinaio-store-theme-1dCOMij_MzTzZOCohX1K7w")).Text 
-                                                        }).ToList());
-                driver.Navigate().GoToUrl($"{category.url}?page={i}");
-                Console.WriteLine($"Leyendo pagina {i}");
-                Thread.Sleep(1000);
+                { 
+                    name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text, 
+                    category = category.name,
+                    price = x.FindElement(By.ClassName("jumboargentinaio-store-theme-1dCOMij_MzTzZOCohX1K7w")).Text 
+                }).ToList());
+                actualPage++;
             }
+            Console.WriteLine();
             return products;
         }
 

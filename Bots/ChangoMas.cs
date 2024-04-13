@@ -45,10 +45,12 @@ namespace BotPrecios.Bots
         {
             driver.Navigate().GoToUrl(category.url);
 
+            Console.WriteLine();
             Helper.WriteColor($"Buscando productos de la categoria [{category.name}]",ConsoleColor.White);
             var productos = driver.FindElement(By.ClassName("vtex-search-result-3-x-totalProducts--layout")).Text;
             _ = int.TryParse(productos.Split(" ")[0].Trim(), out int totalProducts);
             Console.WriteLine($"Se encontraron {totalProducts} productos para la categoria");
+            Console.WriteLine();
 
             return (GetProductsInfo(category, totalProducts));
         }
@@ -65,8 +67,9 @@ namespace BotPrecios.Bots
                     driver.Navigate().GoToUrl($"{category.url}?page={actualPage}");
                     Thread.Sleep(1000);
                 }
-                
-                Console.WriteLine($"Leyendo productos");
+
+                Helper.PrintProgressBar($"Leyendo pagina {actualPage}/{pageCount}", actualPage, pageCount);
+
                 int cicles = 0;
                 while (cicles < 4)
                 {
@@ -78,14 +81,14 @@ namespace BotPrecios.Bots
 
                 var productos = driver.FindElements(By.ClassName("vtex-search-result-3-x-galleryItem"));
                 products.AddRange(productos.Select(x => new Product 
-                                                        { 
-                                                            name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text, 
-                                                            category = category.name,
-                                                            price = x.FindElement(By.ClassName("valtech-gdn-dynamic-product-0-x-dynamicProductPrice")).Text 
-                                                        }).ToList());
+                    { 
+                        name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text, 
+                        category = category.name,
+                        price = x.FindElement(By.ClassName("valtech-gdn-dynamic-product-0-x-dynamicProductPrice")).Text 
+                    }).ToList());
                 actualPage++;
             }
-
+            Console.WriteLine();
             return products;
         }
 

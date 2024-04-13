@@ -10,6 +10,7 @@ if (args.Length > 0)
 
 ChromeOptions options= new() { BrowserVersion = "123" };
 options.AddArgument("--start-maximized");
+options.AddArgument("--log-level=3");
 
 switch (market)
 {
@@ -31,12 +32,21 @@ switch (market)
         break;
     default:
         Jumbo jumboAll = new (options);
-        ChangoMas changoAll = new (options);
-        Carrefour carrefourAll = new (options);
-        Coto cotoAll = new (options);
         jumboAll.GetProductsData();
+        options = new() { BrowserVersion = "123" };
+        options.AddArgument("--start-maximized");
+        options.AddArgument("--log-level=3");
+        ChangoMas changoAll = new (options);
         changoAll.GetProductsData();
+        options = new() { BrowserVersion = "123" };
+        options.AddArgument("--start-maximized");
+        options.AddArgument("--log-level=3");
+        Carrefour carrefourAll = new (options);
         carrefourAll.GetProductsData();
+        options = new() { BrowserVersion = "123" };
+        options.AddArgument("--start-maximized");
+        options.AddArgument("--log-level=3");
+        Coto cotoAll = new (options);
         cotoAll.GetProductsData();
         break;
 }

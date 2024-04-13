@@ -27,12 +27,31 @@ namespace BotPrecios
                 {
                     Console.ForegroundColor = foreColor;
                     Console.BackgroundColor = backColor;
-                    textToWrite = piece.Substring(1, piece.Length - 2);
+                    textToWrite = piece[1..^1];
                 }
                 Console.Write(textToWrite);
                 Console.ResetColor();
             }
             Console.WriteLine();
+        }
+
+        public static void PrintProgressBar(string legend, int current, int total)
+        {
+            int progressLength = (int)Math.Ceiling((double)current / total * 100);
+            string progressBar = "[" + new string('=', progressLength) + new string(' ', 100 - progressLength) + "]";
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.CursorLeft = 0;
+            Console.CursorTop = Console.CursorTop -3;
+            Console.Write($"{progressBar}{new string(' ',18)}{GetCenteredLegend(legend)}");
+        }
+
+        private static string GetCenteredLegend(string legend)
+        {
+            int spacesBefore = (102 - legend.Length) / 2;
+            int spacesAfter = 102 - legend.Length - spacesBefore;
+            return $"{new string(' ', spacesBefore)}{legend}{new string(' ', spacesAfter)}";
         }
     }
 }

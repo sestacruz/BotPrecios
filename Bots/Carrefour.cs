@@ -55,7 +55,9 @@ namespace BotPrecios.Bots
 
             int totalProducts = 0;
             int attemps = 0;
+            Console.WriteLine();
             Helper.WriteColor($"Buscando productos de la categoria [{category.name}]", ConsoleColor.White);
+            Console.WriteLine();
             while (totalProducts == 0 && attemps < 3)
             {
                 if (attemps > 0)
@@ -66,7 +68,7 @@ namespace BotPrecios.Bots
                 Console.WriteLine($"Se encontraron {totalProducts} productos para la categoria");
 
                 if (totalProducts == 0)
-                    Helper.WriteColor("[Reintentando...]", ConsoleColor.Red);
+                    Helper.WriteColor("[Reintentando...]", ConsoleColor.Yellow);
 
                 attemps++;
             }
@@ -86,8 +88,8 @@ namespace BotPrecios.Bots
                     driver.Navigate().GoToUrl($"{category.url}?page={actualPage}");
                     Thread.Sleep(2000);
                 }
-                
-                Console.WriteLine($"Leyendo productos");
+                Helper.PrintProgressBar($"Leyendo pagina {actualPage}/{pageCount}", actualPage, pageCount);
+
                 int cicles = 0;
                 while (cicles < 2)
                 {
@@ -110,7 +112,7 @@ namespace BotPrecios.Bots
                 catch { continue; }
                 finally { actualPage++; }
             }
-
+            Console.WriteLine();
             return products;
         }
 

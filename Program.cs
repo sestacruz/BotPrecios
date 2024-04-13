@@ -25,13 +25,19 @@ switch (market)
         Carrefour carrefour = new (options);
         carrefour.GetProductsData();
         break;
+    case Constants.Coto:
+        Coto coto = new (options);
+        coto.GetProductsData();
+        break;
     default:
         Jumbo jumboAll = new (options);
         ChangoMas changoAll = new (options);
         Carrefour carrefourAll = new (options);
+        Coto cotoAll = new (options);
         jumboAll.GetProductsData();
         changoAll.GetProductsData();
         carrefourAll.GetProductsData();
+        cotoAll.GetProductsData();
         break;
 }
 

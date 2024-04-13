@@ -10,10 +10,14 @@
   <ItemGroup>
     <None Remove="Categories\Carrefour.json" />
     <None Remove="Categories\ChangoMas.json" />
+    <None Remove="Categories\Coto.json" />
     <None Remove="Categories\Jumbo.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Categories\Coto.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Categories\Carrefour.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

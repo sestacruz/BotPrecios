@@ -21,7 +21,7 @@ namespace BotPrecios.Bots
         {
             Helper.WriteColor("Comenzando la lectura de los productos de la CBA de [Jumbo]", ConsoleColor.Green);
             Console.WriteLine("Leyendo categorias");
-            List<Categories> jumboCategories = Helper.LoadJSONFile<Categories>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Jumbo.json"));
+            List<Category> jumboCategories = Helper.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Jumbo.json"));
             List<Product> products = new List<Product>();
 
             Console.WriteLine("Configurando Navegador");
@@ -37,7 +37,7 @@ namespace BotPrecios.Bots
             Helper.WriteColor($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", ConsoleColor.DarkBlue);
         }
 
-        public List<Product> GetProducts(Categories category)
+        public List<Product> GetProducts(Category category)
         {
             driver.Navigate().GoToUrl(category.url);
             Thread.Sleep(2000);
@@ -45,10 +45,10 @@ namespace BotPrecios.Bots
             Helper.WriteColor($"Buscando productos de la categoria [{category.name}]",ConsoleColor.White);
             int totalPages = driver.FindElements(By.ClassName("discoargentina-search-result-custom-1-x-fetchMoreOptionItem")).Count;
 
-            return(GetPagesInfo(category.url, totalPages));
+            return(GetPagesInfo(category, totalPages));
         }
 
-        private List<Product> GetPagesInfo(string url, int pageCount)
+        private List<Product> GetPagesInfo(Category category, int pageCount)
         {
             List<Product> products = new List<Product>();
             Console.WriteLine($"Leyendo pagina 1");
@@ -66,9 +66,10 @@ namespace BotPrecios.Bots
                 products.AddRange(productos.Select(x => new Product 
                                                         { 
                                                             name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text, 
+                                                            category = category.name,
                                                             price = x.FindElement(By.ClassName("jumboargentinaio-store-theme-1dCOMij_MzTzZOCohX1K7w")).Text 
                                                         }).ToList());
-                driver.Navigate().GoToUrl($"{url}?page={i}");
+                driver.Navigate().GoToUrl($"{category.url}?page={i}");
                 Console.WriteLine($"Leyendo pagina {i}");
                 Thread.Sleep(1000);
             }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BotPrecios.Model
 {
-    public class Categories
+    public class Category
     {
         public string name { get; set; }
         public string url { get; set; }

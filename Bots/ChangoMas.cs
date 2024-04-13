@@ -25,7 +25,7 @@ namespace BotPrecios.Bots
         {
             Helper.WriteColor("Comenzando la lectura de los productos de la CBA de [ChangoMas]", ConsoleColor.Yellow);
             Console.WriteLine("Leyendo categorias");
-            List<Categories> changoCategories = Helper.LoadJSONFile<Categories>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\ChangoMas.json"));
+            List<Category> changoCategories = Helper.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\ChangoMas.json"));
             List<Product> products = new List<Product>();
 
             Console.WriteLine("Configurando Navegador");
@@ -41,7 +41,7 @@ namespace BotPrecios.Bots
             Helper.WriteColor($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", ConsoleColor.DarkBlue);
         }
 
-        public List<Product> GetProducts(Categories category)
+        public List<Product> GetProducts(Category category)
         {
             driver.Navigate().GoToUrl(category.url);
 
@@ -50,10 +50,10 @@ namespace BotPrecios.Bots
             _ = int.TryParse(productos.Split(" ")[0].Trim(), out int totalProducts);
             Console.WriteLine($"Se encontraron {totalProducts} productos para la categoria");
 
-            return (GetProductsInfo(category.url, totalProducts));
+            return (GetProductsInfo(category, totalProducts));
         }
 
-        private List<Product> GetProductsInfo(string url, int productsCount)
+        private List<Product> GetProductsInfo(Category category, int productsCount)
         {
             List<Product> products = new List<Product>();
             int pageCount = (int)Math.Round(decimal.Divide(productsCount,24),0,MidpointRounding.ToPositiveInfinity);
@@ -62,7 +62,7 @@ namespace BotPrecios.Bots
             {
                 if (actualPage > 1)
                 {
-                    driver.Navigate().GoToUrl($"{url}?page={actualPage}");
+                    driver.Navigate().GoToUrl($"{category.url}?page={actualPage}");
                     Thread.Sleep(1000);
                 }
                 
@@ -80,6 +80,7 @@ namespace BotPrecios.Bots
                 products.AddRange(productos.Select(x => new Product 
                                                         { 
                                                             name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text, 
+                                                            category = category.name,
                                                             price = x.FindElement(By.ClassName("valtech-gdn-dynamic-product-0-x-dynamicProductPrice")).Text 
                                                         }).ToList());
                 actualPage++;

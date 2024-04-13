@@ -17,7 +17,7 @@ namespace BotPrecios
             return JsonSerializer.Deserialize<List<T>>(json);
         }
 
-        public static void WriteColor(string message, ConsoleColor color)
+        public static void WriteColor(string message, ConsoleColor foreColor, ConsoleColor backColor = ConsoleColor.Black)
         {
             var pieces = Regex.Split(message, @"(\[[^\]]*\])");
             foreach (var piece in pieces)
@@ -25,7 +25,8 @@ namespace BotPrecios
                 var textToWrite = piece;
                 if (piece.StartsWith("[")  && piece.EndsWith("]"))
                 {
-                    Console.ForegroundColor = color;
+                    Console.ForegroundColor = foreColor;
+                    Console.BackgroundColor = backColor;
                     textToWrite = piece.Substring(1, piece.Length - 2);
                 }
                 Console.Write(textToWrite);

@@ -12,25 +12,25 @@ IBot bot;
 if (market == Constants.Jumbo || string.IsNullOrEmpty(market))
 {
     bot = new Jumbo();
-    bot.GetProductsData();
+    products.AddRange(bot.GetProductsData());
     bot.Dispose();
 }
 if (market == Constants.ChangoMas || string.IsNullOrEmpty(market))
 {
     bot = new ChangoMas();
-    bot.GetProductsData();
+    products.AddRange(bot.GetProductsData());
     bot.Dispose();
 }
 if (market == Constants.Carrefour || string.IsNullOrEmpty(market))
 {
     bot = new Carrefour();
-    bot.GetProductsData();
+    products.AddRange(bot.GetProductsData());
     bot.Dispose();
 }
 if (market == Constants.Coto || string.IsNullOrEmpty(market))
 {
     bot = new Coto();
-    bot.GetProductsData();
+    products.AddRange(bot.GetProductsData());
     bot.Dispose();
 }
 

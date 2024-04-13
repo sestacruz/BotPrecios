@@ -2,27 +2,27 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System.Text;
-using OpenQA.Selenium.Support.UI;
-using System.Xml.Linq;
-using OpenQA.Selenium.Interactions;
+using BotPrecios.Interfaces;
 
 
 namespace BotPrecios.Bots
 {
-    public class ChangoMas : IDisposable
+    public class ChangoMas : IDisposable, IBot
     {
         private ChromeOptions _co;
         private IWebDriver driver;
         private const string _superMarket = Constants.ChangoMas;
 
-        public ChangoMas(ChromeOptions co) 
+        public ChangoMas() 
         {
-            _co = co;
+            _co = new() { BrowserVersion = "123" };
+            _co.AddArgument("--start-maximized");
+            _co.AddArgument("--log-level=3");
             driver = new ChromeDriver(_co);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
         }
 
-        public void GetProductsData()
+        public List<Product> GetProductsData()
         {
             Helper.WriteColor("Comenzando la lectura de los productos de la CBA de [ChangoMas]", ConsoleColor.Yellow);
             Console.WriteLine("Leyendo categorias");
@@ -35,11 +35,11 @@ namespace BotPrecios.Bots
                 products.AddRange(GetProducts(category));
             }
 
-            Dispose();
-
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"ChangoMas_{DateTime.Now:yyyyMMdd}.csv");
             File.WriteAllLines(filePath, products.Select(x => x.ToString()), Encoding.UTF8);
             Helper.WriteColor($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", ConsoleColor.DarkBlue);
+
+            return products;
         }
 
         public List<Product> GetProducts(Category category)

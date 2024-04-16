@@ -3,6 +3,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System.Text;
 using BotPrecios.Interfaces;
+using System.Text.RegularExpressions;
 
 
 namespace BotPrecios.Bots
@@ -33,6 +34,7 @@ namespace BotPrecios.Bots
             Console.WriteLine("Configurando Navegador");
             foreach (var category in carrefourCategories)
             {
+                category.AddToDatabase("Carrefour");
                 products.AddRange(GetProducts(category));
             }
 
@@ -103,13 +105,15 @@ namespace BotPrecios.Bots
                 var productos = driver.FindElements(By.ClassName("valtech-carrefourar-search-result-0-x-galleryItem"));
                 try
                 {
-                    products.AddRange(productos.Select(x => new Product
+                    var findedProducts = productos.Select(x => new Product
                     {
                         superMarket = _superMarket,
                         name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text,
                         category = category.name,
-                        price = x.FindElement(By.ClassName("valtech-carrefourar-product-price-0-x-currencyContainer")).Text
-                    }).ToList());
+                        price = Convert.ToDecimal(Regex.Replace(x.FindElement(By.ClassName("valtech-carrefourar-product-price-0-x-currencyContainer")).Text, @"[^\d,]", ""))
+                    }).ToList();
+                    products.AddRange(findedProducts);
+                    findedProducts.ForEach(x => x.AddToDataBase());
                 }
                 catch { continue; }
                 finally { actualPage++; }

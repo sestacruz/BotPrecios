@@ -1,14 +1,14 @@
 [
   {
-    "name": "Panificados",
+    "name": "Pan",
     "url": "https://www.jumbo.com.ar/Almacen/Panificados"
   },
   {
-    "name": "Galletitas Saladas",
+    "name": "Galletitas saladas",
     "url": "https://www.jumbo.com.ar/almacen/desayuno-y-merienda/galletitas-saladas"
   },
   {
-    "name": "Galletitas Dulces",
+    "name": "Galletitas dulces",
     "url": "https://www.jumbo.com.ar/almacen/desayuno-y-merienda/galletitas-dulces"
   },
   {
@@ -16,11 +16,15 @@
     "url": "https://www.jumbo.com.ar/almacen/arroz-y-legumbres/arroz"
   },
   {
-    "name": "Harinas",
-    "url": "https://www.jumbo.com.ar/almacen/harinas/harinas"
+    "name": "Harina de trigo",
+    "url": "https://www.jumbo.com.ar/almacen/harinas/harinas?initialMap=c,c,c&initialQuery=almacen/harinas/harinas&map=category-1,category-2,category-3,tipo-de-producto&query=/almacen/harinas/harinas/harina-de-trigo&searchState"
   },
   {
-    "name": "Pastas Secas",
+    "name": "Harina de maiz",
+    "url": "https://www.jumbo.com.ar/almacen/harinas/harinas?initialMap=c,c,c&initialQuery=almacen/harinas/harinas&map=category-1,category-2,category-3,tipo-de-producto&query=/almacen/harinas/harinas/harina-de-maiz&searchState"
+  },
+  {
+    "name": "Fideos",
     "url": "https://www.jumbo.com.ar/Almacen/Pastas-Secas-y-Salsas"
   },
   {
@@ -48,7 +52,7 @@
     "url": "https://www.jumbo.com.ar/Frutas-y-Verduras/Frutas"
   },
   {
-    "name": "Carne Vacuna",
+    "name": "Carnes",
     "url": "https://www.jumbo.com.ar/carnes/carne-vacuna"
   },
   {
@@ -64,7 +68,7 @@
     "url": "https://www.jumbo.com.ar/frutas-y-verduras/huevos"
   },
   {
-    "name": "Leches",
+    "name": "Leche",
     "url": "https://www.jumbo.com.ar/Lacteos/Leches"
   },
   {
@@ -84,19 +88,23 @@
     "url": "https://www.jumbo.com.ar/almacen/aceites-y-vinagres/aceites-comunes"
   },
   {
-    "name": "Bebidas",
-    "url": "https://www.jumbo.com.ar/bebidas"
+    "name": "Bebidas sin alcohol",
+    "url": "https://www.jumbo.com.ar/bebidas?initialMap=c&initialQuery=bebidas&map=category-1,category-2,category-2&query=/bebidas/aguas/gaseosas&searchState"
+  },
+  {
+    "name": "Bebidas con alcohol",
+    "url": "https://www.jumbo.com.ar/bebidas?initialMap=c&initialQuery=bebidas&map=category-1,category-2,category-2&query=/bebidas/cervezas/vinos&searchState"
   },
   {
     "name": "Sal",
     "url": "https://www.jumbo.com.ar/almacen/sal-pimienta-y-especias/sal"
   },
   {
-    "name": "Mayonesa",
-    "url": "https://www.jumbo.com.ar/almacen/aderezos/mayonesas"
+    "name": "Especias",
+    "url": "https://www.jumbo.com.ar/almacen/sal-pimienta-y-especias/especias"
   },
   {
-    "name": "Vinagres",
+    "name": "Vinagre",
     "url": "https://www.jumbo.com.ar/almacen/aceites-y-vinagres/vinagres"
   },
   {

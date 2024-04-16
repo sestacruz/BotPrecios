@@ -1,4 +1,5 @@
-﻿using BotPrecios.Bots;
+﻿using BotPrecios;
+using BotPrecios.Bots;
 using BotPrecios.Interfaces;
 using BotPrecios.Model;
 
@@ -33,5 +34,13 @@ if (market == Constants.Coto || string.IsNullOrEmpty(market))
     products.AddRange(bot.GetProductsData());
     bot.Dispose();
 }
-
 Console.WriteLine("Fin de la obtención de datos");
+Console.WriteLine(new string('-', 120));
+
+Console.WriteLine("Se obtuvieron los siguientes productos según las categorías:");
+List<Category> categories = Category.GetAllCategories();
+foreach (Category category in categories)
+{
+    int cant = products.Count(p => p.category == category.name);
+    Helper.WriteColor($"{category.name}: [{cant}]", ConsoleColor.Cyan);
+}

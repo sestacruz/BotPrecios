@@ -3,6 +3,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System.Text;
 using BotPrecios.Interfaces;
+using System.Text.RegularExpressions;
 
 
 namespace BotPrecios.Bots
@@ -32,6 +33,7 @@ namespace BotPrecios.Bots
             Console.WriteLine("Configurando Navegador");
             foreach (var category in changoCategories)
             {
+                category.AddToDatabase("ChangoMas");
                 products.AddRange(GetProducts(category));
             }
 
@@ -81,13 +83,15 @@ namespace BotPrecios.Bots
                 }
 
                 var productos = driver.FindElements(By.ClassName("vtex-search-result-3-x-galleryItem"));
-                products.AddRange(productos.Select(x => new Product 
+                var findedProducts = productos.Select(x => new Product
                 {
                     superMarket = _superMarket,
-                    name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text, 
+                    name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text,
                     category = category.name,
-                    price = x.FindElement(By.ClassName("valtech-gdn-dynamic-product-0-x-dynamicProductPrice")).Text 
-                }).ToList());
+                    price = Convert.ToDecimal(Regex.Replace(x.FindElement(By.ClassName("valtech-gdn-dynamic-product-0-x-dynamicProductPrice")).Text, @"[^\d,]", ""))
+                }).ToList();
+                products.AddRange(findedProducts);
+                findedProducts.ForEach(x => x.AddToDataBase());
                 actualPage++;
             }
             Console.WriteLine();

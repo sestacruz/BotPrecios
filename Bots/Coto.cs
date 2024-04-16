@@ -3,6 +3,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System.Text;
 using BotPrecios.Interfaces;
+using System.Text.RegularExpressions;
 
 
 namespace BotPrecios.Bots
@@ -31,9 +32,11 @@ namespace BotPrecios.Bots
             Console.WriteLine("Configurando Navegador");
             foreach (var category in cotoCategories)
             {
+                category.AddToDatabase("Coto");
                 products.AddRange(GetProducts(category));
             }
 
+            Console.WriteLine();
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Coto_{DateTime.Now:yyyyMMdd}.csv");
             File.WriteAllLines(filePath, products.Select(x => x.ToString()), Encoding.UTF8);
             Helper.WriteColor($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", ConsoleColor.DarkBlue);
@@ -61,7 +64,7 @@ namespace BotPrecios.Bots
                 Console.WriteLine($"Se encontraron {totalProducts} productos para la categoria");
 
                 if (totalProducts == 0)
-                    Helper.WriteColor("[Reintentando...]", ConsoleColor.Red);
+                    Helper.WriteColor("[Reintentando...]", ConsoleColor.Yellow);
 
                 attemps++;
             }
@@ -97,7 +100,9 @@ namespace BotPrecios.Bots
                             try { price = item.FindElement(By.XPath(".//div[1]/div/div/div[3]/span")).Text; }
                             catch { price = item.FindElement(By.XPath(".//div[1]/div/div/div[2]/span")).Text; }
                         }
-                        products.Add(new Product { superMarket = _superMarket, name = name, category = category.name, price = price });
+                        Product actual = new Product { superMarket = _superMarket, name = name, category = category.name, price = Convert.ToDecimal(Regex.Replace(price, @"[^\d,]", "")) };
+                        actual.AddToDataBase();
+                        products.Add(actual);
                     }
                 }
                 catch (Exception ex) 

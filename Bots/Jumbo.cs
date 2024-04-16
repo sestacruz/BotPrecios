@@ -3,6 +3,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System.Text;
 using BotPrecios.Interfaces;
+using System.Text.RegularExpressions;
 
 
 namespace BotPrecios.Bots
@@ -24,7 +25,7 @@ namespace BotPrecios.Bots
 
         public List<Product> GetProductsData()
         {
-            Helper.WriteColor("Comenzando la lectura de los productos de la CBA de [Jumbo]", ConsoleColor.Green);
+            Helper.WriteColor("Comenzando la lectura de los productos de la CBA de [Jumbo]",ConsoleColor.White, ConsoleColor.Green);
             Console.WriteLine("Leyendo categorias");
             List<Category> jumboCategories = Helper.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Jumbo.json"));
             List<Product> products = new List<Product>();
@@ -32,6 +33,7 @@ namespace BotPrecios.Bots
             Console.WriteLine("Configurando Navegador");
             foreach (var category in jumboCategories)
             {
+                category.AddToDatabase("Jumbo");
                 products.AddRange(GetProducts(category));
             }
 
@@ -74,13 +76,20 @@ namespace BotPrecios.Bots
                     Thread.Sleep(1500);
                 }
                 var productos = driver.FindElements(By.ClassName("vtex-search-result-3-x-galleryItem"));
-                products.AddRange(productos.Select(x => new Product 
-                { 
-                    superMarket = _superMarket,
-                    name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text, 
-                    category = category.name,
-                    price = x.FindElement(By.ClassName("jumboargentinaio-store-theme-1dCOMij_MzTzZOCohX1K7w")).Text 
-                }).ToList());
+
+                foreach (var product in productos)
+                {
+                    string price = Regex.Replace(product.FindElement(By.ClassName("jumboargentinaio-store-theme-1dCOMij_MzTzZOCohX1K7w")).Text, @"[^\d,]", "");
+                    Product findedProduct = new Product
+                    {
+                        superMarket = _superMarket,
+                        name = product.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text,
+                        category = category.name,
+                        price = Convert.ToDecimal(price == string.Empty ? null : price)
+                    };
+                    products.Add(findedProduct);
+                    findedProduct.AddToDataBase();
+                }
                 actualPage++;
             }
             Console.WriteLine();

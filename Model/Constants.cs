@@ -13,5 +13,7 @@ namespace BotPrecios.Model
         internal const string ChangoMas = "ChangoMas";
         internal const string Carrefour = "Carrefour";
         internal const string Coto = "Coto";
+
+        internal const string dateFormat = "yyyy-MM-dd";
     }
 }

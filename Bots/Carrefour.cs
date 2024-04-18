@@ -4,6 +4,7 @@ using OpenQA.Selenium;
 using System.Text;
 using BotPrecios.Interfaces;
 using System.Text.RegularExpressions;
+using BotPrecios.Helpers;
 
 
 namespace BotPrecios.Bots
@@ -26,9 +27,9 @@ namespace BotPrecios.Bots
 
         public List<Product> GetProductsData()
         {
-            Helper.WriteColor("Comenzando la lectura de los productos de la CBA de [Carrefour]", ConsoleColor.Blue);
+            Utilities.WriteColor("Comenzando la lectura de los productos de la CBA de [Carrefour]", ConsoleColor.Blue);
             Console.WriteLine("Leyendo categorias");
-            List<Category> carrefourCategories = Helper.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Carrefour.json"));
+            List<Category> carrefourCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Carrefour.json"));
             List<Product> products = new List<Product>();
 
             Console.WriteLine("Configurando Navegador");
@@ -40,7 +41,7 @@ namespace BotPrecios.Bots
 
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Carrefour_{DateTime.Now:yyyyMMdd}.csv");
             File.WriteAllLines(filePath, products.Select(x => x.ToString()), Encoding.UTF8);
-            Helper.WriteColor($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", ConsoleColor.DarkBlue);
+            Utilities.WriteColor($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", ConsoleColor.DarkBlue);
 
             return products;
         }
@@ -59,7 +60,7 @@ namespace BotPrecios.Bots
             int totalProducts = 0;
             int attemps = 0;
             Console.WriteLine();
-            Helper.WriteColor($"Buscando productos de la categoria [{category.name}]", ConsoleColor.White);
+            Utilities.WriteColor($"Buscando productos de la categoria [{category.name}]", ConsoleColor.White);
             Console.WriteLine();
             while (totalProducts == 0 && attemps < 3)
             {
@@ -71,7 +72,7 @@ namespace BotPrecios.Bots
                 Console.WriteLine($"Se encontraron {totalProducts} productos para la categoria");
 
                 if (totalProducts == 0)
-                    Helper.WriteColor("[Reintentando...]", ConsoleColor.Yellow);
+                    Utilities.WriteColor("[Reintentando...]", ConsoleColor.Yellow);
 
                 attemps++;
             }
@@ -91,7 +92,7 @@ namespace BotPrecios.Bots
                     driver.Navigate().GoToUrl($"{category.url}?page={actualPage}");
                     Thread.Sleep(2000);
                 }
-                Helper.PrintProgressBar($"Leyendo pagina {actualPage}/{pageCount}", actualPage, pageCount);
+                Utilities.PrintProgressBar($"Leyendo pagina {actualPage}/{pageCount}", actualPage, pageCount);
 
                 int cicles = 0;
                 while (cicles < 2)

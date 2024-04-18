@@ -1,9 +1,9 @@
 ﻿using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace BotPrecios
+namespace BotPrecios.Helpers
 {
-    public static class Helper
+    public static class Utilities
     {
         public static List<T> LoadJSONFile<T>(string path)
         {
@@ -18,7 +18,7 @@ namespace BotPrecios
             foreach (var piece in pieces)
             {
                 var textToWrite = piece;
-                if (piece.StartsWith("[")  && piece.EndsWith("]"))
+                if (piece.StartsWith("[") && piece.EndsWith("]"))
                 {
                     Console.ForegroundColor = foreColor;
                     Console.BackgroundColor = backColor;
@@ -38,8 +38,8 @@ namespace BotPrecios
             Console.WriteLine();
             Console.WriteLine();
             Console.CursorLeft = 0;
-            Console.CursorTop = Console.CursorTop -3;
-            Console.Write($"{progressBar}{new string(' ',18)}{GetCenteredLegend(legend)}");
+            Console.CursorTop = Console.CursorTop - 3;
+            Console.Write($"{progressBar}{new string(' ', 18)}{GetCenteredLegend(legend)}");
         }
 
         private static string GetCenteredLegend(string legend)

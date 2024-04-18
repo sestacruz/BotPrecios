@@ -4,6 +4,7 @@ using OpenQA.Selenium;
 using System.Text;
 using BotPrecios.Interfaces;
 using System.Text.RegularExpressions;
+using BotPrecios.Helpers;
 
 
 namespace BotPrecios.Bots
@@ -25,9 +26,9 @@ namespace BotPrecios.Bots
 
         public List<Product> GetProductsData()
         {
-            Helper.WriteColor("Comenzando la lectura de los productos de la CBA de [ChangoMas]", ConsoleColor.Yellow);
+            Utilities.WriteColor("Comenzando la lectura de los productos de la CBA de [ChangoMas]", ConsoleColor.Yellow);
             Console.WriteLine("Leyendo categorias");
-            List<Category> changoCategories = Helper.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\ChangoMas.json"));
+            List<Category> changoCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\ChangoMas.json"));
             List<Product> products = new List<Product>();
 
             Console.WriteLine("Configurando Navegador");
@@ -39,7 +40,7 @@ namespace BotPrecios.Bots
 
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"ChangoMas_{DateTime.Now:yyyyMMdd}.csv");
             File.WriteAllLines(filePath, products.Select(x => x.ToString()), Encoding.UTF8);
-            Helper.WriteColor($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", ConsoleColor.DarkBlue);
+            Utilities.WriteColor($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", ConsoleColor.DarkBlue);
 
             return products;
         }
@@ -49,7 +50,7 @@ namespace BotPrecios.Bots
             driver.Navigate().GoToUrl(category.url);
 
             Console.WriteLine();
-            Helper.WriteColor($"Buscando productos de la categoria [{category.name}]",ConsoleColor.White);
+            Utilities.WriteColor($"Buscando productos de la categoria [{category.name}]",ConsoleColor.White);
             var productos = driver.FindElement(By.ClassName("vtex-search-result-3-x-totalProducts--layout")).Text;
             _ = int.TryParse(productos.Split(" ")[0].Trim(), out int totalProducts);
             Console.WriteLine($"Se encontraron {totalProducts} productos para la categoria");
@@ -71,7 +72,7 @@ namespace BotPrecios.Bots
                     Thread.Sleep(1000);
                 }
 
-                Helper.PrintProgressBar($"Leyendo pagina {actualPage}/{pageCount}", actualPage, pageCount);
+                Utilities.PrintProgressBar($"Leyendo pagina {actualPage}/{pageCount}", actualPage, pageCount);
 
                 int cicles = 0;
                 while (cicles < 4)

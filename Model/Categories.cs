@@ -7,6 +7,7 @@ namespace BotPrecios.Model
     {
         public string name { get; set; }
         public string url { get; set; }
+        public decimal variation { get; set; }
 
         public bool AddToDatabase(string superMarket)
         {

@@ -9,10 +9,46 @@
 
   <ItemGroup>
     <None Remove="Categories\Carrefour.json" />
+    <None Remove="Categories\CarrefourCBAData.Json" />
     <None Remove="Categories\ChangoMas.json" />
+    <None Remove="Categories\ChangoMasCBAData.Json" />
     <None Remove="Categories\Coto.json" />
+    <None Remove="Categories\CotoCBAData.Json" />
     <None Remove="Categories\Jumbo.json" />
-    <None Remove="Precios.sqlite" />
+    <None Remove="Categories\JumboCBAData.Json" />
+    <None Remove="Posts\CBAMonthCost.txt" />
+    <None Remove="Posts\Top5CheapestCategory.txt" />
+    <None Remove="Posts\Top5CheapestProducts.txt" />
+    <None Remove="Posts\Top5MostExpensiveCategory.txt" />
+    <None Remove="Posts\Top5MostExpensiveProducts.txt" />
+    <None Remove="Posts\TopMonthCBAs.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Categories\CarrefourCBAData.Json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Categories\ChangoMasCBAData.Json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Categories\CotoCBAData.Json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Categories\JumboCBAData.Json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Posts\Top5CheapestCategory.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Posts\Top5MostExpensiveCategory.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Posts\Top5MostExpensiveProducts.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Posts\Top5CheapestProducts.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -28,8 +64,11 @@
     <Content Include="Categories\Jumbo.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Precios.sqlite">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Posts\CBAMonthCost.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Posts\TopMonthCBAs.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
@@ -37,6 +76,12 @@
     <PackageReference Include="Dapper" Version="2.1.44" />
     <PackageReference Include="Selenium.WebDriver" Version="4.19.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Precios.sqlite">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

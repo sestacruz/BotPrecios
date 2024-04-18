@@ -11,6 +11,7 @@ namespace BotPrecios.Model
         public string name { get; set; }
         public string category { get; set; }
         public decimal? price { get; set; }
+        public decimal variation { get; set; }
 
         public override string ToString()
         {

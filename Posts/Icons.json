@@ -1,0 +1,28 @@
+{
+  "supermakets": [
+    {
+      "name": "Coto",
+      "icon": "🔴"
+    },
+    {
+      "name": "Jumbo",
+      "icon": "🟢"
+    },
+    {
+      "name": "Carrefour",
+      "icon": "🔵"
+    },
+    {
+      "name": "ChangoMas",
+      "icon": "🟡"
+    }
+  ],
+  "up": "🔺",
+  "down": "🔻",
+  "num1": "1️⃣",
+  "num2": "2️⃣",
+  "num3": "3️⃣",
+  "num4": "4️⃣",
+  "num5": "5️⃣"
+}
+

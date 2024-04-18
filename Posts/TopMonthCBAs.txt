@@ -1,0 +1,1 @@
+Este mes la CBA con costo más bajo se consiguió en [smIcon1] [superMarket1] [smCost1]. Mientras que la más alta se consiguió en [smIcon2] [superMarket2] [smCost2].

@@ -1,7 +1,7 @@
-﻿Los 5 productos que más subieron de precio esta semana son:
+﻿Los 5 productos que tuvieron una variacion positiva en su precio esta semana son:
 
-1️⃣ [prodcut1] (superMarket1) [varProduct1]
-2️⃣ [prodcut2] (superMarket2) [varProduct2]
-3️⃣ [prodcut3] (superMarket3) [varProduct3]
-4️⃣ [prodcut4] (superMarket4) [varProduct4]
-5️⃣ [prodcut5] (superMarket5) [varProduct5]
+1️⃣ [product1] ([smIcon1][superMarket1]) [varProduct1]
+2️⃣ [product2] ([smIcon2][superMarket2]) [varProduct2]
+3️⃣ [product3] ([smIcon3][superMarket3]) [varProduct3]
+4️⃣ [product4] ([smIcon4][superMarket4]) [varProduct4]
+5️⃣ [product5] ([smIcon4][superMarket5]) [varProduct5]

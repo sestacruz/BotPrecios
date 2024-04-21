@@ -35,17 +35,22 @@ namespace BotPrecios.Helpers
             return actualCBA;
         }
 
-        public static void GetMostsCBAs(List<CBA> cbas)
+        public static void GetMostsCBAs(List<CBA> cbas, out string mostExpensive, out string cheapest)
         {
             cbas = cbas.OrderBy(x => x.totalPrice).ToList();
+            mostExpensive = cbas.LastOrDefault().superMarket;
+            cheapest = cbas.FirstOrDefault().superMarket;
             Console.WriteLine(new string('-', 60));
-            Utilities.WriteColor($"El supermercado [{cbas.LastOrDefault().superMarket}] tiene la CBA mas cara", ConsoleColor.Red);
-            Utilities.WriteColor($"El supermercado [{cbas.FirstOrDefault().superMarket}] tiene la CBA mas barata", ConsoleColor.Green);
+            Utilities.WriteColor($"El supermercado [{mostExpensive}] tiene la CBA mas cara", ConsoleColor.Red);
+            Utilities.WriteColor($"El supermercado [{mostExpensive}] tiene la CBA mas barata", ConsoleColor.Green);
             Console.WriteLine(new string('-', 60));
         }
 
-        public static List<CBA> GetTop5Categories()
+        public static void GetTop5Categories(out List<CBA>top5postive, out List<CBA>top5negative)
         {
+            top5postive = new List<CBA>();
+            top5negative = new List<CBA>();
+
             using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
             con.Open();
             Console.WriteLine(new string('-', 90));
@@ -62,6 +67,7 @@ namespace BotPrecios.Helpers
                 string category = actualCBA[i].category.Length <= 7 ? actualCBA[i].category + "\t\t" : actualCBA[i].category;
                 string superMarket = actualCBA[i].superMarket.Length <= 7 ? actualCBA[i].superMarket + "\t" : actualCBA[i].superMarket;
                 Utilities.WriteColor($"[{i + 1}]\t|\t{superMarket}\t|\t{category}\t|\t{actualCBA[i].variation:0.00}%", ConsoleColor.Magenta);
+                top5postive.Add(actualCBA[i]);                
             }
             Console.WriteLine(new string('-', 90));
             for (int i = 5; i >= 1; i--)
@@ -70,13 +76,15 @@ namespace BotPrecios.Helpers
                 string category = actualCBA[index].category.Length <= 7 ? actualCBA[index].category + "\t\t" : actualCBA[index].category;
                 string superMarket = actualCBA[index].superMarket.Length <= 7 ? actualCBA[index].superMarket + "\t" : actualCBA[index].superMarket;
                 Utilities.WriteColor($"[{(i*(-1))+6}]\t|\t{superMarket}\t|\t{category}\t|\t{actualCBA[index].variation:0.00}%", ConsoleColor.Magenta);
+                top5negative.Add(actualCBA[index]);
             }
-
-            return actualCBA;
         }
 
-        public static List<CBA> GetTop5Products()
+        public static void GetTop5Products(out List<CBA> top5postive, out List<CBA> top5negative)
         {
+            top5postive = new List<CBA>();
+            top5negative = new List<CBA>();
+
             using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
             con.Open();
             Console.WriteLine(new string('-', 90));
@@ -93,6 +101,7 @@ namespace BotPrecios.Helpers
                 string product = actualCBA[i].product.Length <= 7 ? actualCBA[i].product + "\t\t" : actualCBA[i].product;
                 string superMarket = actualCBA[i].superMarket.Length <= 7 ? actualCBA[i].superMarket + "\t" : actualCBA[i].superMarket;
                 Utilities.WriteColor($"[{i + 1}]\t|\t{superMarket}\t|\t{product}\t|\t{actualCBA[i].variation:0.00}%", ConsoleColor.Magenta);
+                top5postive.Add(actualCBA[i]);
             }
             Console.WriteLine(new string('-', 90));
             for (int i = 5; i >= 1; i--)
@@ -101,9 +110,8 @@ namespace BotPrecios.Helpers
                 string product = actualCBA[index].product.Length <= 7 ? actualCBA[index].product + "\t\t" : actualCBA[index].product;
                 string superMarket = actualCBA[index].superMarket.Length <= 7 ? actualCBA[index].superMarket + "\t" : actualCBA[index].superMarket;
                 Utilities.WriteColor($"[{(i * (-1)) + 6}]\t|\t{superMarket}\t|\t{product}\t|\t{actualCBA[index].variation:0.00}%", ConsoleColor.Magenta);
+                top5negative.Add(actualCBA[index]);
             }
-
-            return actualCBA;
         }
     }
 }

@@ -2,10 +2,17 @@
 using BotPrecios.Helpers;
 using BotPrecios.Interfaces;
 using BotPrecios.Model;
+using Microsoft.Extensions.Configuration;
 
 string option = string.Empty;
 if (args.Length > 0)
     option = args[0];
+
+var builder = new ConfigurationBuilder();
+builder.SetBasePath(Directory.GetCurrentDirectory())
+   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+IConfiguration config = builder.Build();
 
 List<Product> products = new List<Product>();
 IBot bot;
@@ -47,8 +54,24 @@ foreach (Category category in categories)
 if (option == "statistics" || string.IsNullOrEmpty(option))
 {
     List<CBA> CBAs = StatisticsHelper.GetCBAStatistics();
-    StatisticsHelper.GetMostsCBAs(CBAs);
-    StatisticsHelper.GetTop5Categories();
-    StatisticsHelper.GetTop5Products();
-
+    StatisticsHelper.GetTop5Categories(out List<CBA> topPositiveCat, out List<CBA> topNegativeCat);
+    StatisticsHelper.GetTop5Products(out List<CBA> topPositiveProd, out List<CBA> topNegativeProd);
+    StatisticsHelper.GetMostsCBAs(CBAs,out string expensive,out string cheapest);
+    if (args.Length > 1)
+    {
+        Console.WriteLine("Posteando en X");
+        string apiUrl = config["ApiURL"];
+        PostsHelper postsHelper = new(apiUrl);
+        postsHelper.PublishMontlyCBA(CBAs);
+        postsHelper.PublishTop5CheapestCategory(topPositiveCat);
+        postsHelper.PublishTop5MostExpensiveCategory(topNegativeCat);
+        //postsHelper.PublishTop5CheapestProduct(topPositiveProd);
+        //postsHelper.PublishTop5MostExpensiveProduct(topNegativeProd);
+        DateTime today = DateTime.Now;
+        DateTime lastDayOfMonth = new (today.Year,today.Month,DateTime.DaysInMonth(today.Year,today.Month));
+        if (today.Date == lastDayOfMonth.Date)
+            postsHelper.PublisTopMonthCBAs(expensive, cheapest);
+        
+    }
 }
+

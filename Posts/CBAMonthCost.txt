@@ -1,4 +1,4 @@
-El costo de la CBA para el día [date] en los principales supermercados:
+El costo de la CBA para lo que va del mes de [month] en los siguientes supermercados:
 
 [smIcon1] [superMarket1] [smVar1] [smDirectionIcon1]
 [smIcon2] [superMarket2] [smVar2] [smDirectionIcon2]

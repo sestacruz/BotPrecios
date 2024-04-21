@@ -1,7 +1,7 @@
-﻿Los 5 categorías de productos que más subieron de precio esta semana son:
+﻿Los 5 categorias de productos que mas subieron de precio esta semana son:
 
-1️⃣ [category1] (superMarket1) [varCategory1]
-2️⃣ [category2] (superMarket2) [varCategory2]
-3️⃣ [category3] (superMarket3) [varCategory3]
-4️⃣ [category4] (superMarket4) [varCategory4]
-5️⃣ [category5] (superMarket5) [varCategory5]
+1️⃣ [category1] ([smIcon1] [superMarket1]) [varCategory1]
+2️⃣ [category2] ([smIcon2] [superMarket2]) [varCategory2]
+3️⃣ [category3] ([smIcon3] [superMarket3]) [varCategory3]
+4️⃣ [category4] ([smIcon4] [superMarket4]) [varCategory4]
+5️⃣ [category5] ([smIcon4] [superMarket5]) [varCategory5]

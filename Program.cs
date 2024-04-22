@@ -62,16 +62,15 @@ if (option == "statistics" || string.IsNullOrEmpty(option))
         Console.WriteLine("Posteando en X");
         string apiUrl = config["ApiURL"];
         PostsHelper postsHelper = new(apiUrl);
-        postsHelper.PublishMontlyCBA(CBAs);
-        postsHelper.PublishTop5CheapestCategory(topPositiveCat);
-        postsHelper.PublishTop5MostExpensiveCategory(topNegativeCat);
-        //postsHelper.PublishTop5CheapestProduct(topPositiveProd);
-        //postsHelper.PublishTop5MostExpensiveProduct(topNegativeProd);
+        //postsHelper.PublishMontlyCBA(CBAs);
+        //postsHelper.PublishTop5CheapestCategory(topPositiveCat);
+        //postsHelper.PublishTop5MostExpensiveCategory(topNegativeCat);
+        postsHelper.PublishTop5CheapestProduct(topPositiveProd);
+        postsHelper.PublishTop5MostExpensiveProduct(topNegativeProd);
         DateTime today = DateTime.Now;
         DateTime lastDayOfMonth = new (today.Year,today.Month,DateTime.DaysInMonth(today.Year,today.Month));
         if (today.Date == lastDayOfMonth.Date)
             postsHelper.PublisTopMonthCBAs(expensive, cheapest);
-        
     }
 }
 

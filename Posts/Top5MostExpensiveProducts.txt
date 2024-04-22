@@ -1,4 +1,4 @@
-﻿Los 5 productos que tuvieron una variacion positiva en su precio esta semana son:
+﻿Los 5 productos que mas subieron de precio esta semana son:
 
 1️⃣ [product1] ([smIcon1][superMarket1]) [varProduct1]
 2️⃣ [product2] ([smIcon2][superMarket2]) [varProduct2]

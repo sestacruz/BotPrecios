@@ -9,29 +9,31 @@ using BotPrecios.Helpers;
 
 namespace BotPrecios.Bots
 {
-    public class Jumbo : IDisposable,IBot
+    internal class Jumbo : IDisposable,IBot
     {
         private ChromeOptions _co;
         private IWebDriver driver;
         private const string _superMarket = Constants.Jumbo;
+        private readonly ILogHelper _log;
 
-        public Jumbo() 
+        public Jumbo(ILogHelper log) 
         {
             _co = new() { BrowserVersion = "123" };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
             driver = new ChromeDriver(_co);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            _log=log;
         }
 
         public List<Product> GetProductsData()
         {
-            Utilities.WriteColor("Comenzando la lectura de los productos de la CBA de [Jumbo]",ConsoleColor.White, ConsoleColor.Green);
-            Console.WriteLine("Leyendo categorias");
+            _log.ConsoleLog($"({_superMarket})Comenzando la lectura de los productos de la CBA de [{_superMarket}]",foreColor:ConsoleColor.White,backColor:ConsoleColor.Green);
+            _log.ConsoleLog($"({_superMarket}) Leyendo categorias");
             List<Category> jumboCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Jumbo.json"));
             List<Product> products = new List<Product>();
 
-            Console.WriteLine("Configurando Navegador");
+            _log.ConsoleLog($"({_superMarket})Configurando Navegador");
             foreach (var category in jumboCategories)
             {
                 category.AddToDatabase("Jumbo");
@@ -40,7 +42,7 @@ namespace BotPrecios.Bots
 
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Jumbo_{DateTime.Now:yyyyMMdd}.csv");
             File.WriteAllLines(filePath, products.Select(x => x.ToString()), Encoding.UTF8);
-            Utilities.WriteColor($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", ConsoleColor.DarkBlue);
+            _log.ConsoleLog($"({_superMarket})Fin de la carga de datos. El archivo se encuentra en [{filePath}]", foreColor:ConsoleColor.DarkBlue);
 
             return products;
         }
@@ -49,9 +51,7 @@ namespace BotPrecios.Bots
         {
             driver.Navigate().GoToUrl(category.url);
 
-            Console.WriteLine();
-            Utilities.WriteColor($"Buscando productos de la categoria [{category.name}]",ConsoleColor.White);
-            Console.WriteLine();
+            _log.ConsoleLog($"({_superMarket})Buscando productos de la categoria [{category.name}]", foreColor: ConsoleColor.White);
 
             int totalPages = 0, attemps = 0, refreshes = 0;
             while (totalPages == 0 && attemps < 3 && refreshes < 2)
@@ -60,10 +60,10 @@ namespace BotPrecios.Bots
                     Thread.Sleep(500);
 
                 totalPages = driver.FindElements(By.ClassName("discoargentina-search-result-custom-1-x-fetchMoreOptionItem")).Count;
-                Console.WriteLine($"Se encontraron {totalPages} productos para la categoria");
+                _log.ConsoleLog($"({_superMarket})Se encontraron [{totalPages}] paginas para la categoria", foreColor: totalPages == 0 ? ConsoleColor.Red : ConsoleColor.White);
 
                 if (totalPages == 0)
-                    Utilities.WriteColor("[Reintentando...]", ConsoleColor.Yellow);
+                    _log.ConsoleLog($"({_superMarket})[Reintentando...]", foreColor: ConsoleColor.DarkYellow);
 
                 attemps++;
                 if (attemps == 3)
@@ -73,9 +73,6 @@ namespace BotPrecios.Bots
                     refreshes++;
                 }
             }
-
-            //driver.FindElements(By.ClassName("discoargentina-search-result-custom-1-x-fetchMoreOptionItem")).Count;
-
             return (GetPagesInfo(category, totalPages));
         }
 
@@ -85,8 +82,7 @@ namespace BotPrecios.Bots
             int actualPage = 1;
             while (actualPage <= pageCount)
             {
-                Utilities.PrintProgressBar($"Leyendo pagina {actualPage}/{pageCount}", actualPage, pageCount);
-                //Console.Write($"\rLeyendo pagina {actualPage}/{pageCount}");
+                _log.ConsoleLog($"({_superMarket})Leyendo pagina {actualPage}/{pageCount}");
                 if (actualPage > 1)
                 {
                     driver.Navigate().GoToUrl($"{category.url}?page={actualPage}");
@@ -115,7 +111,6 @@ namespace BotPrecios.Bots
                 }
                 actualPage++;
             }
-            Console.WriteLine();
             return products;
         }
 

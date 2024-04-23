@@ -15,24 +15,26 @@ namespace BotPrecios.Bots
         private IWebDriver driver;
         private bool cookiesAccepted = false;
         private const string _superMarket = Constants.Carrefour;
+        private readonly ILogHelper _log;
 
-        public Carrefour() 
+        internal Carrefour(ILogHelper log) 
         {
             _co = new() { BrowserVersion = "123" };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
             driver = new ChromeDriver(_co);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            _log = log;
         }
 
         public List<Product> GetProductsData()
         {
-            Utilities.WriteColor("Comenzando la lectura de los productos de la CBA de [Carrefour]", ConsoleColor.Blue);
-            Console.WriteLine("Leyendo categorias");
+            _log.ConsoleLog($"({_superMarket})Comenzando la lectura de los productos de la CBA de [Carrefour]", foreColor:ConsoleColor.Blue);
+            _log.ConsoleLog($"({_superMarket})Leyendo categorias");
             List<Category> carrefourCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Carrefour.json"));
             List<Product> products = new List<Product>();
 
-            Console.WriteLine("Configurando Navegador");
+            _log.ConsoleLog($"({_superMarket})Configurando Navegador");
             foreach (var category in carrefourCategories)
             {
                 category.AddToDatabase("Carrefour");
@@ -41,7 +43,7 @@ namespace BotPrecios.Bots
 
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Carrefour_{DateTime.Now:yyyyMMdd}.csv");
             File.WriteAllLines(filePath, products.Select(x => x.ToString()), Encoding.UTF8);
-            Utilities.WriteColor($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", ConsoleColor.DarkBlue);
+            _log.ConsoleLog($"({_superMarket})Fin de la carga de datos. El archivo se encuentra en [{filePath}]", foreColor: ConsoleColor.DarkBlue);
 
             return products;
         }
@@ -59,9 +61,7 @@ namespace BotPrecios.Bots
 
             int totalProducts = 0;
             int attemps = 0;
-            Console.WriteLine();
-            Utilities.WriteColor($"Buscando productos de la categoria [{category.name}]", ConsoleColor.White);
-            Console.WriteLine();
+            _log.ConsoleLog($"({_superMarket})Buscando productos de la categoria [{category.name}]", foreColor: ConsoleColor.White);
             while (totalProducts == 0 && attemps < 3)
             {
                 if (attemps > 0)
@@ -69,10 +69,10 @@ namespace BotPrecios.Bots
 
                 var productos = driver.FindElement(By.ClassName("valtech-carrefourar-search-result-0-x-totalProducts--layout")).Text;
                 _ = int.TryParse(productos.Split(" ")[0].Trim(), out totalProducts);
-                Console.WriteLine($"Se encontraron {totalProducts} productos para la categoria");
+                _log.ConsoleLog($"({_superMarket})Se encontraron [{totalProducts}] productos para la categoria", foreColor: totalProducts == 0 ? ConsoleColor.Red : ConsoleColor.White);
 
                 if (totalProducts == 0)
-                    Utilities.WriteColor("[Reintentando...]", ConsoleColor.Yellow);
+                    _log.ConsoleLog($"({_superMarket})[Reintentando...]", foreColor: ConsoleColor.DarkYellow);
 
                 attemps++;
             }
@@ -92,7 +92,7 @@ namespace BotPrecios.Bots
                     driver.Navigate().GoToUrl($"{category.url}?page={actualPage}");
                     Thread.Sleep(2000);
                 }
-                Utilities.PrintProgressBar($"Leyendo pagina {actualPage}/{pageCount}", actualPage, pageCount);
+                _log.ConsoleLog($"({_superMarket})Leyendo pagina {actualPage}/{pageCount}");
 
                 int cicles = 0;
                 while (cicles < 2)
@@ -114,12 +114,12 @@ namespace BotPrecios.Bots
                         price = Convert.ToDecimal(Regex.Replace(x.FindElement(By.ClassName("valtech-carrefourar-product-price-0-x-currencyContainer")).Text, @"[^\d,]", ""))
                     }).ToList();
                     products.AddRange(findedProducts);
-                    findedProducts.ForEach(x => x.AddToDataBase());
+                    Product.AddAllToDataBase(findedProducts);
                 }
                 catch { continue; }
                 finally { actualPage++; }
             }
-            Console.WriteLine();
+
             return products;
         }
 

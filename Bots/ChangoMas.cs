@@ -9,29 +9,31 @@ using BotPrecios.Helpers;
 
 namespace BotPrecios.Bots
 {
-    public class ChangoMas : IDisposable, IBot
+    internal class ChangoMas : IDisposable, IBot
     {
         private ChromeOptions _co;
         private IWebDriver driver;
         private const string _superMarket = Constants.ChangoMas;
+        private readonly ILogHelper _log;
 
-        public ChangoMas() 
+        public ChangoMas(ILogHelper log)
         {
             _co = new() { BrowserVersion = "123" };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
             driver = new ChromeDriver(_co);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            _log = log;
         }
 
         public List<Product> GetProductsData()
         {
-            Utilities.WriteColor("Comenzando la lectura de los productos de la CBA de [ChangoMas]", ConsoleColor.Yellow);
-            Console.WriteLine("Leyendo categorias");
+            _log.ConsoleLog($"({_superMarket})Comenzando la lectura de los productos de la CBA de [ChangoMas]",foreColor: ConsoleColor.Yellow);
+            _log.ConsoleLog($"({_superMarket})Leyendo categorias");
             List<Category> changoCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\ChangoMas.json"));
             List<Product> products = new List<Product>();
 
-            Console.WriteLine("Configurando Navegador");
+            _log.ConsoleLog($"({_superMarket})({_superMarket})Configurando Navegador");
             foreach (var category in changoCategories)
             {
                 category.AddToDatabase("ChangoMas");
@@ -40,7 +42,7 @@ namespace BotPrecios.Bots
 
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"ChangoMas_{DateTime.Now:yyyyMMdd}.csv");
             File.WriteAllLines(filePath, products.Select(x => x.ToString()), Encoding.UTF8);
-            Utilities.WriteColor($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", ConsoleColor.DarkBlue);
+            _log.ConsoleLog($"({_superMarket})Fin de la carga de datos. El archivo se encuentra en [{filePath}]", foreColor: ConsoleColor.DarkBlue);
 
             return products;
         }
@@ -49,12 +51,24 @@ namespace BotPrecios.Bots
         {
             driver.Navigate().GoToUrl(category.url);
 
-            Console.WriteLine();
-            Utilities.WriteColor($"Buscando productos de la categoria [{category.name}]",ConsoleColor.White);
-            var productos = driver.FindElement(By.ClassName("vtex-search-result-3-x-totalProducts--layout")).Text;
-            _ = int.TryParse(productos.Split(" ")[0].Trim(), out int totalProducts);
-            Console.WriteLine($"Se encontraron {totalProducts} productos para la categoria");
-            Console.WriteLine();
+            _log.ConsoleLog($"({_superMarket})Buscando productos de la categoria [{category.name}]", foreColor: ConsoleColor.White);
+
+            int attemps = 0;
+            int totalProducts = 0;
+            
+            while (totalProducts == 0 && attemps < 3)
+            {
+                Thread.Sleep(1000*attemps);
+
+                var productos = driver.FindElement(By.ClassName("vtex-search-result-3-x-totalProducts--layout")).Text;
+                _ = int.TryParse(productos.Split(" ")[0].Trim(), out totalProducts);
+                _log.ConsoleLog($"({_superMarket})Se encontraron [{totalProducts}] productos para la categoria",foreColor:totalProducts == 0? ConsoleColor.Red : ConsoleColor.White);
+
+                if (totalProducts == 0)
+                    _log.ConsoleLog($"({_superMarket})[Reintentando...]", foreColor: ConsoleColor.DarkYellow);
+
+                attemps++;
+            }
 
             return (GetProductsInfo(category, totalProducts));
         }
@@ -72,7 +86,7 @@ namespace BotPrecios.Bots
                     Thread.Sleep(1000);
                 }
 
-                Utilities.PrintProgressBar($"Leyendo pagina {actualPage}/{pageCount}", actualPage, pageCount);
+                _log.ConsoleLog($"({_superMarket})Leyendo pagina {actualPage}/{pageCount}");
 
                 int cicles = 0;
                 while (cicles < 4)
@@ -92,10 +106,9 @@ namespace BotPrecios.Bots
                     price = Convert.ToDecimal(Regex.Replace(x.FindElement(By.ClassName("valtech-gdn-dynamic-product-0-x-dynamicProductPrice")).Text, @"[^\d,]", ""))
                 }).ToList();
                 products.AddRange(findedProducts);
-                findedProducts.ForEach(x => x.AddToDataBase());
+                Product.AddAllToDataBase(products);
                 actualPage++;
             }
-            Console.WriteLine();
             return products;
         }
 

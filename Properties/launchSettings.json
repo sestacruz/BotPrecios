@@ -1,8 +1,7 @@
 {
   "profiles": {
     "BotPrecios": {
-      "commandName": "Project",
-      "commandLineArgs": "statistics asd\r\n "
+      "commandName": "Project"
     }
   }
 }

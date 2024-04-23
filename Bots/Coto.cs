@@ -15,33 +15,34 @@ namespace BotPrecios.Bots
         private ChromeOptions _co;
         private IWebDriver driver;
         private const string _superMarket = Constants.Coto;
+        private readonly ILogHelper _log;
 
-        public Coto() 
+        internal Coto(ILogHelper log)
         {
             _co = new() { BrowserVersion = "123" };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
             driver = new ChromeDriver(_co);
+            _log = log;
         }
 
         public List<Product> GetProductsData()
         {
-            Utilities.WriteColor("Comenzando la lectura de los productos de la CBA de [COTO]", ConsoleColor.White,ConsoleColor.Red);
-            Console.WriteLine("Leyendo categorias");
+            _log.ConsoleLog($"({_superMarket})Comenzando la lectura de los productos de la CBA de [COTO]", foreColor: ConsoleColor.White, backColor: ConsoleColor.Red);
+            _log.ConsoleLog($"({_superMarket})Leyendo categorias");
             List<Category> cotoCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Coto.json"));
             List<Product> products = new List<Product>();
 
-            Console.WriteLine("Configurando Navegador");
+            _log.ConsoleLog($"({_superMarket})Configurando Navegador");
             foreach (var category in cotoCategories)
             {
                 category.AddToDatabase("Coto");
                 products.AddRange(GetProducts(category));
             }
 
-            Console.WriteLine();
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Coto_{DateTime.Now:yyyyMMdd}.csv");
             File.WriteAllLines(filePath, products.Select(x => x.ToString()), Encoding.UTF8);
-            Utilities.WriteColor($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", ConsoleColor.DarkBlue);
+            _log.ConsoleLog($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", foreColor: ConsoleColor.DarkBlue);
 
             return products;
         }
@@ -53,9 +54,7 @@ namespace BotPrecios.Bots
 
             int totalProducts = 0;
             int attemps = 0;
-            Console.WriteLine();
-            Utilities.WriteColor($"Buscando productos de la categoria [{category.name}]", ConsoleColor.White);
-            Console.WriteLine();
+            _log.ConsoleLog($"Buscando productos de la categoria [{category.name}]", foreColor: ConsoleColor.White);
             while (totalProducts == 0 && attemps < 3)
             {
                 if (attemps > 0)
@@ -63,10 +62,10 @@ namespace BotPrecios.Bots
 
                 var productos = driver.FindElement(By.Id("resultsCount")).Text;
                 _ = int.TryParse(productos.Split(" ")[0].Trim(), out totalProducts);
-                Console.WriteLine($"Se encontraron {totalProducts} productos para la categoria");
+                _log.ConsoleLog($"({_superMarket})Se encontraron [{totalProducts}] productos para la categoria", foreColor: totalProducts == 0 ? ConsoleColor.Red : ConsoleColor.White);
 
                 if (totalProducts == 0)
-                    Utilities.WriteColor("[Reintentando...]", ConsoleColor.Yellow);
+                    _log.ConsoleLog($"({_superMarket})[Reintentando...]", foreColor:ConsoleColor.DarkYellow);
 
                 attemps++;
             }
@@ -86,7 +85,7 @@ namespace BotPrecios.Bots
                     driver.Navigate().GoToUrl($"{category.url}?No={actualPage*12}");
                     Thread.Sleep(100);
                 }
-                Utilities.PrintProgressBar($"Leyendo productos {actualPage+1}/{pageCount}", actualPage+1, pageCount);
+                _log.ConsoleLog($"({_superMarket})Leyendo productos {actualPage+1}/{pageCount}");
 
                 var productos = driver.FindElements(By.XPath(".//ul[@id='products']/li"));
                 try
@@ -124,12 +123,11 @@ namespace BotPrecios.Bots
                 }
                 catch (Exception ex) 
                 {
-                    Utilities.WriteColor($"[{ex.Message}]",ConsoleColor.Black, ConsoleColor.Red);
+                    _log.ConsoleLog($"({_superMarket}) {ex.Message}",Constants.ErrorLevel.Error);
                     continue; 
                 }
                 finally { actualPage++; }
             }
-            Console.WriteLine();
             return products;
         }
 

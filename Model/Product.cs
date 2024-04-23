@@ -20,10 +20,29 @@ namespace BotPrecios.Model
 
         public bool AddToDataBase()
         {
+            bool result = false;
             using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
             con.Open();
-            return con.Execute($"INSERT INTO Products VALUES (@superMarket,@category,@name,@price,@priceDate)", 
-                new { superMarket, name, category, price, priceDate = DateTime.Now.ToString(Constants.dateFormat) }) > 1;
+            using var trx = con.BeginTransaction();
+            result = con.Execute($"INSERT INTO Products VALUES (@superMarket,@category,@name,@price,@priceDate)", 
+            new { superMarket, name, category, price, priceDate = DateTime.Now.ToString(Constants.dateFormat) }) > 1;
+            trx.Commit();
+            return result;
+        }
+
+        public static bool AddAllToDataBase(List<Product> products)
+        {
+            bool result = false;
+            using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
+            con.Open();
+            using var trx = con.BeginTransaction();
+            foreach (Product product in products)
+            {
+                result &= con.Execute($"INSERT INTO Products VALUES (@superMarket,@category,@name,@price,@priceDate)",
+                new { product.superMarket, product.name, product.category, product.price, priceDate = DateTime.Now.ToString(Constants.dateFormat) }) > 1;
+            }
+            trx.Commit();
+            return result;
         }
 
         public static Product GetProductByDate(Product product, DateTime date)

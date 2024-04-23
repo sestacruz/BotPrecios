@@ -1,4 +1,5 @@
-﻿using BotPrecios.Model;
+﻿using BotPrecios.Interfaces;
+using BotPrecios.Model;
 using Dapper;
 using OpenQA.Selenium.DevTools.V121.Target;
 using System;
@@ -29,7 +30,7 @@ namespace BotPrecios.Helpers
                 CBA cba = new();
                 cba.GetAccumCBABySupermarket(supermarket);
                 actualCBA.Add(cba);
-                Utilities.WriteColor($"[{(supermarket.Length <7 ? supermarket+"\t" : supermarket)}]\t|\t${cba.totalPrice:0.00}\t|\t{cba.variation:0.00}%",ConsoleColor.Magenta);
+                Console.WriteLine($"[{(supermarket.Length <7 ? supermarket+"\t" : supermarket)}]\t|\t${cba.totalPrice:0.00}\t|\t{cba.variation:0.00}%");
             }
 
             return actualCBA;
@@ -41,8 +42,8 @@ namespace BotPrecios.Helpers
             mostExpensive = cbas.LastOrDefault().superMarket;
             cheapest = cbas.FirstOrDefault().superMarket;
             Console.WriteLine(new string('-', 60));
-            Utilities.WriteColor($"El supermercado [{mostExpensive}] tiene la CBA mas cara", ConsoleColor.Red);
-            Utilities.WriteColor($"El supermercado [{mostExpensive}] tiene la CBA mas barata", ConsoleColor.Green);
+            Console.WriteLine($"El supermercado [{mostExpensive}] tiene la CBA mas cara");
+            Console.WriteLine($"El supermercado [{mostExpensive}] tiene la CBA mas barata");
             Console.WriteLine(new string('-', 60));
         }
 
@@ -66,7 +67,7 @@ namespace BotPrecios.Helpers
             {
                 string category = actualCBA[i].category.Length <= 7 ? actualCBA[i].category + "\t\t" : actualCBA[i].category;
                 string superMarket = actualCBA[i].superMarket.Length <= 7 ? actualCBA[i].superMarket + "\t" : actualCBA[i].superMarket;
-                Utilities.WriteColor($"[{i + 1}]\t|\t{superMarket}\t|\t{category}\t|\t{actualCBA[i].variation:0.00}%", ConsoleColor.Magenta);
+                Console.WriteLine($"[{i + 1}]\t|\t{superMarket}\t|\t{category}\t|\t{actualCBA[i].variation:0.00}%");
                 top5postive.Add(actualCBA[i]);                
             }
             Console.WriteLine(new string('-', 90));
@@ -75,7 +76,7 @@ namespace BotPrecios.Helpers
                 int index = actualCBA.Count - i;
                 string category = actualCBA[index].category.Length <= 7 ? actualCBA[index].category + "\t\t" : actualCBA[index].category;
                 string superMarket = actualCBA[index].superMarket.Length <= 7 ? actualCBA[index].superMarket + "\t" : actualCBA[index].superMarket;
-                Utilities.WriteColor($"[{(i*(-1))+6}]\t|\t{superMarket}\t|\t{category}\t|\t{actualCBA[index].variation:0.00}%", ConsoleColor.Magenta);
+                Console.WriteLine($"[{(i*(-1))+6}]\t|\t{superMarket}\t|\t{category}\t|\t{actualCBA[index].variation:0.00}%");
                 top5negative.Add(actualCBA[index]);
             }
         }
@@ -100,7 +101,7 @@ namespace BotPrecios.Helpers
             {
                 string product = actualCBA[i].product.Length <= 7 ? actualCBA[i].product + "\t\t" : actualCBA[i].product;
                 string superMarket = actualCBA[i].superMarket.Length <= 7 ? actualCBA[i].superMarket + "\t" : actualCBA[i].superMarket;
-                Utilities.WriteColor($"[{i + 1}]\t|\t{superMarket}\t|\t{product}\t|\t{actualCBA[i].variation:0.00}%", ConsoleColor.Magenta);
+                Console.WriteLine($"[{i + 1}]\t|\t{superMarket}\t|\t{product}\t|\t{actualCBA[i].variation:0.00}%");
                 top5postive.Add(actualCBA[i]);
             }
             Console.WriteLine(new string('-', 90));
@@ -109,7 +110,7 @@ namespace BotPrecios.Helpers
                 int index = actualCBA.Count - i;
                 string product = actualCBA[index].product.Length <= 7 ? actualCBA[index].product + "\t\t" : actualCBA[index].product;
                 string superMarket = actualCBA[index].superMarket.Length <= 7 ? actualCBA[index].superMarket + "\t" : actualCBA[index].superMarket;
-                Utilities.WriteColor($"[{(i * (-1)) + 6}]\t|\t{superMarket}\t|\t{product}\t|\t{actualCBA[index].variation:0.00}%", ConsoleColor.Magenta);
+                Console.WriteLine($"[{(i * (-1)) + 6}]\t|\t{superMarket}\t|\t{product}\t|\t{actualCBA[index].variation:0.00}%");
                 top5negative.Add(actualCBA[index]);
             }
         }

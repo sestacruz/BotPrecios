@@ -15,5 +15,13 @@ namespace BotPrecios.Model
         internal const string Coto = "Coto";
 
         internal const string dateFormat = "yyyy-MM-dd";
+
+        internal struct ErrorLevel
+        {
+            internal const string Error = "ERROR";
+            internal const string Debug = "DEBUG";
+            internal const string Info = "INFO";
+            internal const string Warning = "WARN";
+        }
     }
 }

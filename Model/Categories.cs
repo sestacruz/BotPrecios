@@ -12,12 +12,15 @@ namespace BotPrecios.Model
         public bool AddToDatabase(string superMarket)
         {
             using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
-            con.Open();//conn.ExecuteScalar<bool>("select count(1) from Table where Id=@id", new {id});
+            con.Open();
+            using var trx = con.BeginTransaction();
             bool exists = con.ExecuteScalar<bool>($"SELECT Count(1) FROM Categories WHERE Name = @name", new { name });
             if (!exists)
             {
-                return con.Execute($"INSERT INTO Categories VALUES (@superMarket,@name,@url)",
+                bool result = con.Execute($"INSERT INTO Categories VALUES (@superMarket,@name,@url)",
                     new { superMarket, name, url }) > 1;
+                trx.Commit();
+                return result;
             }
             else return true;
         }

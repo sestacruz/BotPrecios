@@ -13,19 +13,19 @@ namespace BotPrecios.Model
 {
     internal class CBA
     {
-        public string superMarket { get; set; }
-        public string category { get; set; }
-        public string product { get; set; }
-        public decimal totalPrice { get; set; }
-        public decimal variation { get; set; }
+        public string SuperMarket { get; set; }
+        public string Category { get; set; }
+        public string Product { get; set; }
+        public decimal TotalPrice { get; set; }
+        public decimal Variation { get; set; }
 
         public void GetAccumCBABySupermarket(string superMarket)
         {
             List<CBAData> CBAProducts = Utilities.LoadJSONFile<CBAData>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Categories\\{superMarket}CBAData.json"));
-            this.superMarket = superMarket;
-            CBA cbaYesterday = new() { superMarket = superMarket};
+            this.SuperMarket = superMarket;
+            CBA cbaYesterday = new() { SuperMarket = superMarket};
 
-            DateTime firstDay = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            DateTime firstDay = new(DateTime.Now.Year, DateTime.Now.Month, 1);
             string sql = "SELECT Supermarket,SUM(price) as totalPrice FROM Products " +
                          "WHERE Supermarket = @superMarket " +
                          "AND Name IN @names " +
@@ -61,16 +61,16 @@ namespace BotPrecios.Model
                     continue;
                 
                 if(resultToday != null )
-                    totalPrice += resultToday.totalPrice / item.names.Length;
+                    TotalPrice += resultToday.TotalPrice / item.names.Length;
                 if (resultYesterday != null)
-                    cbaYesterday.totalPrice += resultYesterday.totalPrice / item.names.Length;
+                    cbaYesterday.TotalPrice += resultYesterday.TotalPrice / item.names.Length;
             }
-            variation = CalculateVariation(totalPrice, cbaYesterday.totalPrice);
+            Variation = CalculateVariation(TotalPrice, cbaYesterday.TotalPrice);
         }
 
         public static List<CBA> GetCategoriesVariation()
         {
-            DateTime firstDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            DateTime firstDate = new(DateTime.Now.Year, DateTime.Now.Month, 1);
             string sql = "SELECT Supermarket,Category, " +
                          "CAST(((SUM(CASE WHEN PriceDate = @today THEN Price ELSE 0 END)  -" +
                          " SUM(CASE WHEN PriceDate = @firstDate THEN Price ELSE 0 END)) * 100) / " +
@@ -87,7 +87,7 @@ namespace BotPrecios.Model
 
         public static List<CBA> GetProductsVariation()
         {
-            DateTime firstDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            DateTime firstDate = new(DateTime.Now.Year, DateTime.Now.Month, 1);
             string sql = "SELECT Supermarket,Name as product, " +
                          "CAST(((SUM(CASE WHEN PriceDate = @today THEN Price ELSE 0 END)  -" +
                          " SUM(CASE WHEN PriceDate = @firstDate THEN Price ELSE 0 END)) * 100) / " +
@@ -102,7 +102,7 @@ namespace BotPrecios.Model
             return result;
         }
 
-        private decimal CalculateVariation(decimal actualPrice, decimal previousPrice)
+        private static decimal CalculateVariation(decimal actualPrice, decimal previousPrice)
         {
             return actualPrice == 0 ? 0 : decimal.Divide((previousPrice - actualPrice) *100,actualPrice);
         }

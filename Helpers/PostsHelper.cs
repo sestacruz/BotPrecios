@@ -24,17 +24,17 @@ namespace BotPrecios.Helpers
 
             for (int i = 0; i < cbas.Count; i++)
             {
-                string icon = SetSuperMarketIcon(cbas[i].superMarket);
+                string icon = SetSuperMarketIcon(cbas[i].SuperMarket);
 
                 string variationIcon = "🟰";
-                if (cbas[i].variation > 0)
+                if (cbas[i].Variation > 0)
                     variationIcon = "🔺";
-                else if (cbas[i].variation < 0)
+                else if (cbas[i].Variation < 0)
                     variationIcon = "🔻";
 
                 post = post.Replace($"[smIcon{i+1}]", icon);
-                post = post.Replace($"[superMarket{i + 1}]", cbas[i].superMarket);
-                post = post.Replace($"[smVar{i + 1}]", cbas[i].variation.ToString("0.00") + "%");
+                post = post.Replace($"[superMarket{i + 1}]", cbas[i].SuperMarket);
+                post = post.Replace($"[smVar{i + 1}]", cbas[i].Variation.ToString("0.00") + "%");
                 post = post.Replace($"[smDirectionIcon{i + 1}]", variationIcon);
             }
             _message = post;
@@ -48,14 +48,14 @@ namespace BotPrecios.Helpers
             for (int i = 0; i < cbas.Count; i++)
             {
                 int categoryLength = 40; //Se calculo en base al espacio disponible de la plantilla
-                string icon = SetSuperMarketIcon(cbas[i].superMarket);
+                string icon = SetSuperMarketIcon(cbas[i].SuperMarket);
                 post = post.Replace($"[smIcon{i + 1}]", icon);
                 categoryLength -= icon.Length;
-                post = post.Replace($"[varCategory{i + 1}]", cbas[i].variation.ToString("0.00") + "%");
-                categoryLength -= cbas[i].variation.ToString("0.00").Length;
-                post = post.Replace($"[superMarket{i + 1}]", cbas[i].superMarket);
-                categoryLength -= cbas[i].superMarket.Length;
-                string categoryName = cbas[i].category.Length > categoryLength ? cbas[i].category.Substring(0, categoryLength - 3) + "..." : cbas[i].category;
+                post = post.Replace($"[varCategory{i + 1}]", cbas[i].Variation.ToString("0.00") + "%");
+                categoryLength -= cbas[i].Variation.ToString("0.00").Length;
+                post = post.Replace($"[superMarket{i + 1}]", cbas[i].SuperMarket);
+                categoryLength -= cbas[i].SuperMarket.Length;
+                string categoryName = cbas[i].Category.Length > categoryLength ? cbas[i].Category.Substring(0, categoryLength - 3) + "..." : cbas[i].Category;
                 post = post.Replace($"[category{i + 1}]", categoryName);
             }
             _message = post;
@@ -69,14 +69,14 @@ namespace BotPrecios.Helpers
             for (int i = 0; i < cbas.Count; i++)
             {
                 int categoryLength = 40; //Se calculo en base al espacio disponible de la plantilla
-                string icon = SetSuperMarketIcon(cbas[i].superMarket);
+                string icon = SetSuperMarketIcon(cbas[i].SuperMarket);
                 post = post.Replace($"[smIcon{i + 1}]", icon);
                 categoryLength -= icon.Length;
-                post = post.Replace($"[varCategory{i + 1}]", cbas[i].variation.ToString("0.00") + "%");
-                categoryLength -= cbas[i].variation.ToString("0.00").Length;
-                post = post.Replace($"[superMarket{i + 1}]", cbas[i].superMarket);
-                categoryLength -= cbas[i].superMarket.Length;
-                string categoryName = cbas[i].category.Length > categoryLength ? cbas[i].category.Substring(0, categoryLength - 3) + "..." : cbas[i].category;
+                post = post.Replace($"[varCategory{i + 1}]", cbas[i].Variation.ToString("0.00") + "%");
+                categoryLength -= cbas[i].Variation.ToString("0.00").Length;
+                post = post.Replace($"[superMarket{i + 1}]", cbas[i].SuperMarket);
+                categoryLength -= cbas[i].SuperMarket.Length;
+                string categoryName = cbas[i].Category.Length > categoryLength ? cbas[i].Category.Substring(0, categoryLength - 3) + "..." : cbas[i].Category;
                 post = post.Replace($"[category{i + 1}]", categoryName);
             }
             _message = post;
@@ -90,14 +90,14 @@ namespace BotPrecios.Helpers
             for (int i = 0; i < cbas.Count; i++)
             {
                 int productLength = 35; //Se calculo en base al espacio disponible de la plantilla
-                string icon = SetSuperMarketIcon(cbas[i].superMarket);
+                string icon = SetSuperMarketIcon(cbas[i].SuperMarket);
                 post = post.Replace($"[smIcon{i + 1}]", icon);
                 productLength -= icon.Length;
-                post = post.Replace($"[varProduct{i + 1}]", cbas[i].variation.ToString("0.00") + "%");
-                productLength -= cbas[i].variation.ToString("0.00").Length;
-                post = post.Replace($"[superMarket{i + 1}]", cbas[i].superMarket);
-                productLength -= cbas[i].superMarket.Length;
-                string productName = cbas[i].product.Length > productLength ? cbas[i].product.Substring(0, productLength - 3) + "..." : cbas[i].product;
+                post = post.Replace($"[varProduct{i + 1}]", cbas[i].Variation.ToString("0.00") + "%");
+                productLength -= cbas[i].Variation.ToString("0.00").Length;
+                post = post.Replace($"[superMarket{i + 1}]", cbas[i].SuperMarket);
+                productLength -= cbas[i].SuperMarket.Length;
+                string productName = cbas[i].Product.Length > productLength ? cbas[i].Product.Substring(0, productLength - 3) + "..." : cbas[i].Product;
                 post = post.Replace($"[product{i + 1}]", productName);
             }
             _message = post;
@@ -111,14 +111,14 @@ namespace BotPrecios.Helpers
             for (int i = 0; i < cbas.Count; i++)
             {
                 int productLength = 35; //Se calculo en base al espacio disponible de la plantilla
-                string icon = SetSuperMarketIcon(cbas[i].superMarket);
+                string icon = SetSuperMarketIcon(cbas[i].SuperMarket);
                 post = post.Replace($"[smIcon{i + 1}]", icon);
                 productLength -= icon.Length;
-                post = post.Replace($"[varProduct{i + 1}]", cbas[i].variation.ToString("0.00") + "%");
-                productLength -= cbas[i].variation.ToString("0.00").Length;
-                post = post.Replace($"[superMarket{i + 1}]", cbas[i].superMarket);
-                productLength -= cbas[i].superMarket.Length;
-                string productName = cbas[i].product.Length > productLength ? cbas[i].product.Substring(0, productLength - 3) + "..." : cbas[i].product;
+                post = post.Replace($"[varProduct{i + 1}]", cbas[i].Variation.ToString("0.00") + "%");
+                productLength -= cbas[i].Variation.ToString("0.00").Length;
+                post = post.Replace($"[superMarket{i + 1}]", cbas[i].SuperMarket);
+                productLength -= cbas[i].SuperMarket.Length;
+                string productName = cbas[i].Product.Length > productLength ? cbas[i].Product.Substring(0, productLength - 3) + "..." : cbas[i].Product;
                 post = post.Replace($"[product{i + 1}]", productName);
             }
             _message = post;

@@ -1,6 +1,7 @@
 ﻿using BotPrecios.Interfaces;
 using BotPrecios.Model;
 using Dapper;
+using OpenQA.Selenium.DevTools.V121.CSS;
 using OpenQA.Selenium.DevTools.V121.Target;
 using System;
 using System.Collections.Generic;
@@ -13,104 +14,114 @@ namespace BotPrecios.Helpers
 {
     internal class StatisticsHelper
     {
-        public static List<CBA> GetCBAStatistics()
+        public static List<CBA> GetCBAStatistics(ILogHelper logger)
         {
-            List<CBA> actualCBA = new ();
+            List<CBA> actualCBA = [];
             using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
             con.Open();
             List<string> supermarkets = con.Query<string>("SELECT name FROM Supermarkets").ToList();
-            Console.WriteLine(new string('-',60));
-            Console.WriteLine("Resultados CBA");
-            Console.WriteLine(new string('-',60));
-            Console.WriteLine("Supermercado\t|\tPrecio\t\t|\tVariación");
-            Console.WriteLine(new string('-',60));
+            logger.ConsoleLog(new string('_', 62));
+            logger.ConsoleLog(LogHelper.GetCenteredLegend("Resultados CBA",62));
+            logger.ConsoleLog(new string('_',62));
+            logger.ConsoleLog($"{LogHelper.GetCenteredLegend("Supermercado",20)}|{LogHelper.GetCenteredLegend("Precio",20)} |{LogHelper.GetCenteredLegend("Variación",20)}");
+            logger.ConsoleLog(new string('_',62));
 
             foreach(string supermarket in supermarkets) 
             { 
                 CBA cba = new();
                 cba.GetAccumCBABySupermarket(supermarket);
                 actualCBA.Add(cba);
-                Console.WriteLine($"[{(supermarket.Length <7 ? supermarket+"\t" : supermarket)}]\t|\t${cba.totalPrice:0.00}\t|\t{cba.variation:0.00}%");
+                logger.ConsoleLog($"[{LogHelper.GetCenteredLegend(supermarket, 20)}]|" +
+                    $"${LogHelper.GetCenteredLegend(cba.TotalPrice.ToString("0.00"),19)}|" +
+                    $"{LogHelper.GetCenteredLegend(cba.Variation.ToString("0.00"),19)}%");
             }
 
             return actualCBA;
         }
 
-        public static void GetMostsCBAs(List<CBA> cbas, out string mostExpensive, out string cheapest)
+        public static void GetMostsCBAs(ILogHelper logger,List<CBA> cbas, out string mostExpensive, out string cheapest)
         {
-            cbas = cbas.OrderBy(x => x.totalPrice).ToList();
-            mostExpensive = cbas.LastOrDefault().superMarket;
-            cheapest = cbas.FirstOrDefault().superMarket;
-            Console.WriteLine(new string('-', 60));
-            Console.WriteLine($"El supermercado [{mostExpensive}] tiene la CBA mas cara");
-            Console.WriteLine($"El supermercado [{mostExpensive}] tiene la CBA mas barata");
-            Console.WriteLine(new string('-', 60));
+            cbas = [.. cbas.OrderBy(x => x.TotalPrice)];
+            mostExpensive = cbas.LastOrDefault().SuperMarket;
+            cheapest = cbas.FirstOrDefault().SuperMarket;
+            logger.ConsoleLog(new string('_', 60));
+            logger.ConsoleLog($"El supermercado [{mostExpensive}] tiene la CBA mas cara",foreColor:ConsoleColor.Red);
+            logger.ConsoleLog($"El supermercado [{cheapest}] tiene la CBA mas barata", foreColor:ConsoleColor.Green);
+            logger.ConsoleLog(new string('_', 60));
         }
 
-        public static void GetTop5Categories(out List<CBA>top5postive, out List<CBA>top5negative)
+        public static void GetTop5Categories(ILogHelper logger, out List<CBA>top5postive, out List<CBA>top5negative)
         {
-            top5postive = new List<CBA>();
-            top5negative = new List<CBA>();
+            top5postive = [];
+            top5negative = [];
 
-            using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
-            con.Open();
-            Console.WriteLine(new string('-', 90));
-            Console.WriteLine("Tops 5 Categorias");
-            Console.WriteLine(new string('-', 90));
-            Console.WriteLine("Puesto\t|\tSupermercado\t|\tCategoria\t\t|\tVariación");
-            Console.WriteLine(new string('-', 90));
+            logger.ConsoleLog(new string('_', 83));
+            logger.ConsoleLog(LogHelper.GetCenteredLegend("Tops 5 Categorias",83));
+            logger.ConsoleLog(new string('_', 83));
+            logger.ConsoleLog($"{LogHelper.GetCenteredLegend("#",20)}|" +
+                $"{LogHelper.GetCenteredLegend("Supermercado",20)}|" +
+                $"{LogHelper.GetCenteredLegend("Categoria",20)}|" +
+                $"{LogHelper.GetCenteredLegend("Variación",20)}");
+            logger.ConsoleLog(new string('_', 83));
 
             List<CBA> actualCBA = CBA.GetCategoriesVariation();
-            actualCBA = actualCBA.OrderBy(x => x.variation).ToList();
+            //Se quitan las variaciones demasiado grandes, pueden ser causadas por errores en los datos
+            actualCBA = [.. actualCBA.Where(x => x.Variation < 1000).OrderBy(x => x.Variation)];
 
             for (int i = 0; i < 5; i++)
             {
-                string category = actualCBA[i].category.Length <= 7 ? actualCBA[i].category + "\t\t" : actualCBA[i].category;
-                string superMarket = actualCBA[i].superMarket.Length <= 7 ? actualCBA[i].superMarket + "\t" : actualCBA[i].superMarket;
-                Console.WriteLine($"[{i + 1}]\t|\t{superMarket}\t|\t{category}\t|\t{actualCBA[i].variation:0.00}%");
+                logger.ConsoleLog($"[{LogHelper.GetCenteredLegend((i + 1).ToString(),20)}]|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].SuperMarket,20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Category, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Variation.ToString("0.00"), 20)}%");
                 top5postive.Add(actualCBA[i]);                
             }
-            Console.WriteLine(new string('-', 90));
+            logger.ConsoleLog(new string('=', 83));
             for (int i = 5; i >= 1; i--)
             {
                 int index = actualCBA.Count - i;
-                string category = actualCBA[index].category.Length <= 7 ? actualCBA[index].category + "\t\t" : actualCBA[index].category;
-                string superMarket = actualCBA[index].superMarket.Length <= 7 ? actualCBA[index].superMarket + "\t" : actualCBA[index].superMarket;
-                Console.WriteLine($"[{(i*(-1))+6}]\t|\t{superMarket}\t|\t{category}\t|\t{actualCBA[index].variation:0.00}%");
+                logger.ConsoleLog($"[{LogHelper.GetCenteredLegend(((i * (-1)) + 6).ToString(), 20)}]|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].SuperMarket, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Category, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Variation.ToString("0.00"), 20)}%");
                 top5negative.Add(actualCBA[index]);
             }
         }
 
-        public static void GetTop5Products(out List<CBA> top5postive, out List<CBA> top5negative)
+        public static void GetTop5Products(ILogHelper logger,out List<CBA> top5postive, out List<CBA> top5negative)
         {
-            top5postive = new List<CBA>();
-            top5negative = new List<CBA>();
+            top5postive = [];
+            top5negative = [];
 
-            using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
-            con.Open();
-            Console.WriteLine(new string('-', 90));
-            Console.WriteLine("Tops 5 Productos");
-            Console.WriteLine(new string('-', 90));
-            Console.WriteLine("Puesto\t|\tSupermercado\t|\tProducto\t\t|\tVariación");
-            Console.WriteLine(new string('-', 90));
+            logger.ConsoleLog(new string('_', 83));
+            logger.ConsoleLog(LogHelper.GetCenteredLegend("Tops 5 Productos", 83));
+            logger.ConsoleLog(new string('_', 83));
+            logger.ConsoleLog($"{LogHelper.GetCenteredLegend("#", 20)}|" +
+                $"{LogHelper.GetCenteredLegend("Supermercado", 20)}|" +
+                $"{LogHelper.GetCenteredLegend("Producto", 20)}|" +
+                $"{LogHelper.GetCenteredLegend("Variación", 20)}");
+            logger.ConsoleLog(new string('_', 83));
 
             List<CBA> actualCBA = CBA.GetProductsVariation();
-            actualCBA = actualCBA.OrderBy(x => x.variation).ToList();
+            //Se quitan las variaciones demasiado grandes, pueden ser causadas por errores en los datos
+            actualCBA = [.. actualCBA.Where(x => x.Variation < 1000).OrderBy(x => x.Variation)];
 
             for (int i = 0; i < 5; i++)
             {
-                string product = actualCBA[i].product.Length <= 7 ? actualCBA[i].product + "\t\t" : actualCBA[i].product;
-                string superMarket = actualCBA[i].superMarket.Length <= 7 ? actualCBA[i].superMarket + "\t" : actualCBA[i].superMarket;
-                Console.WriteLine($"[{i + 1}]\t|\t{superMarket}\t|\t{product}\t|\t{actualCBA[i].variation:0.00}%");
+                logger.ConsoleLog($"[{LogHelper.GetCenteredLegend((i + 1).ToString(), 20)}]|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].SuperMarket, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Product, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Variation.ToString("0.00"), 20)}%");
                 top5postive.Add(actualCBA[i]);
             }
-            Console.WriteLine(new string('-', 90));
+            logger.ConsoleLog(new string('=', 83));
             for (int i = 5; i >= 1; i--)
             {
                 int index = actualCBA.Count - i;
-                string product = actualCBA[index].product.Length <= 7 ? actualCBA[index].product + "\t\t" : actualCBA[index].product;
-                string superMarket = actualCBA[index].superMarket.Length <= 7 ? actualCBA[index].superMarket + "\t" : actualCBA[index].superMarket;
-                Console.WriteLine($"[{(i * (-1)) + 6}]\t|\t{superMarket}\t|\t{product}\t|\t{actualCBA[index].variation:0.00}%");
+                logger.ConsoleLog($"[{LogHelper.GetCenteredLegend(((i * (-1)) + 6).ToString(), 20)}]|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].SuperMarket, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Product, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Variation.ToString("0.00"), 20)}%");
                 top5negative.Add(actualCBA[index]);
             }
         }

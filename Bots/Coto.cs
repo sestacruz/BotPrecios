@@ -19,7 +19,7 @@ namespace BotPrecios.Bots
 
         internal Coto(ILogHelper log)
         {
-            _co = new() { BrowserVersion = "123" };
+            _co = new() { BrowserVersion = "124" };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
             driver = new ChromeDriver(_co);

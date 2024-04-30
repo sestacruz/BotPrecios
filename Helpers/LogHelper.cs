@@ -29,7 +29,7 @@ namespace BotPrecios.Helpers
                 {
                     if (piece == $"[{Constants.ErrorLevel.Error}]")
                         Console.ForegroundColor = ConsoleColor.Red;
-                    else if (piece.StartsWith(" "))
+                    else if (piece.StartsWith(' '))
                         WriteColor(piece, ConsoleColor.White, ConsoleColor.Red);
                 }
                 else
@@ -65,10 +65,10 @@ namespace BotPrecios.Helpers
                         WriteColor(auxPiece.Replace(smName,""), foreColor, backColor);
                     }
 
-                    if (piece.StartsWith(" ") && !piece.StartsWith(" ("))
+                    if (piece.StartsWith(' ') && !piece.StartsWith(" ("))
                         WriteColor(piece, foreColor, backColor);
                 }
-                if (!piece.StartsWith(" "))
+                if (!piece.StartsWith(' '))
                     Console.Write(piece);
                 Console.ResetColor();
             }
@@ -82,7 +82,7 @@ namespace BotPrecios.Helpers
             foreach (var piece in pieces)
             {
                 var textToWrite = piece;
-                if (piece.StartsWith("[") && piece.EndsWith("]"))
+                if (piece.StartsWith('[') && piece.EndsWith(']'))
                 {
                     Console.ForegroundColor = foreColor;
                     Console.BackgroundColor = backColor;
@@ -93,10 +93,11 @@ namespace BotPrecios.Helpers
             }
         }
 
-        private static string GetCenteredLegend(string legend)
+        public static string GetCenteredLegend(string legend, int totalChar = 102)
         {
-            int spacesBefore = (102 - legend.Length) / 2;
-            int spacesAfter = 102 - legend.Length - spacesBefore;
+            legend = legend.Length > totalChar ? string.Concat(legend.AsSpan(0, totalChar - 3), "...") : legend;
+            int spacesBefore = (totalChar - legend.Length) / 2;
+            int spacesAfter = totalChar - legend.Length - spacesBefore;
             return $"{new string(' ', spacesBefore)}{legend}{new string(' ', spacesAfter)}";
         }
         public void PrintProgressBar(string legend, int current, int total)
@@ -107,7 +108,7 @@ namespace BotPrecios.Helpers
             Console.WriteLine();
             Console.WriteLine();
             Console.CursorLeft = 0;
-            Console.CursorTop = Console.CursorTop - 3;
+            Console.CursorTop =- 3;
             Console.Write($"{progressBar}{new string(' ', 18)}{GetCenteredLegend(legend)}");
         }
 

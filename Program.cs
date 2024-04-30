@@ -3,13 +3,17 @@ using BotPrecios.Helpers;
 using BotPrecios.Interfaces;
 using BotPrecios.Model;
 using Microsoft.Extensions.Configuration;
-using System.Diagnostics.CodeAnalysis;
 
 string option = string.Empty;
-ILogHelper logger = new LogHelper("General");
+LogHelper logger = new("General");
 
 if (args.Length > 0)
     option = args[0];
+
+bool debug = false;
+#if DEBUG
+debug = true;
+#endif
 
 var builder = new ConfigurationBuilder();
 builder.SetBasePath(Directory.GetCurrentDirectory())
@@ -34,7 +38,7 @@ if (!string.IsNullOrEmpty(option))
     bots = bots.Where(b => option == b.GetType().Name || string.IsNullOrEmpty(option)).ToArray();
 }
 
-List<Task<List<Product>>> tasks = new List<Task<List<Product>>>();
+List<Task<List<Product>>> tasks = [];
 foreach (var bot in bots)
 {
     logger.ConsoleLog($"Inciando bot {bot.GetType().Name}");
@@ -61,11 +65,14 @@ foreach (Category category in categories)
 }
 if (option == "statistics" || string.IsNullOrEmpty(option))
 {
-    List<CBA> CBAs = StatisticsHelper.GetCBAStatistics();
-    StatisticsHelper.GetTop5Categories(out List<CBA> topPositiveCat, out List<CBA> topNegativeCat);
-    StatisticsHelper.GetTop5Products(out List<CBA> topPositiveProd, out List<CBA> topNegativeProd);
-    StatisticsHelper.GetMostsCBAs(CBAs,out string expensive,out string cheapest);
-    if (args.Length > 1 /*|| args.Length == 0*/)
+    List<CBA> CBAs = StatisticsHelper.GetCBAStatistics(logger);
+    logger.ConsoleLog(" ");
+    StatisticsHelper.GetTop5Categories(logger, out List<CBA> topPositiveCat, out List<CBA> topNegativeCat);
+    logger.ConsoleLog(" ");
+    StatisticsHelper.GetTop5Products(logger,out List<CBA> topPositiveProd, out List<CBA> topNegativeProd);
+    logger.ConsoleLog(" ");
+    StatisticsHelper.GetMostsCBAs(logger, CBAs,out string expensive,out string cheapest);
+    if (!debug)
     {
         logger.ConsoleLog("Posteando en X");
         string apiUrl = config["ApiURL"];

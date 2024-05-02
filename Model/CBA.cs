@@ -78,7 +78,7 @@ namespace BotPrecios.Model
                          "FROM Products " +
                          "WHERE PriceDate IN (@firstDate, @today) " +
                          "GROUP BY Supermarket, Category " +
-                         "HAVING COUNT(DISTINCT PriceDate) = 2;";
+                         (firstDate.Date != DateTime.Now.Date ? "HAVING COUNT(DISTINCT PriceDate) = 2;" : "");
             using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
             con.Open();
             List<CBA> result = con.Query<CBA>(sql, new { today = DateTime.Now.ToString(Constants.dateFormat), firstDate = firstDate.ToString(Constants.dateFormat) }).ToList();
@@ -95,7 +95,7 @@ namespace BotPrecios.Model
                          "FROM Products " +
                          "WHERE PriceDate IN (@firstDate, @today) " +
                          "GROUP BY Supermarket, Name " +
-                         "HAVING COUNT(DISTINCT PriceDate) = 2;";
+                         (firstDate.Date != DateTime.Now.Date ? "HAVING COUNT(DISTINCT PriceDate) = 2;" : "");
             using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
             con.Open();
             List<CBA> result = con.Query<CBA>(sql, new { today = DateTime.Now.ToString(Constants.dateFormat), firstDate = firstDate.ToString(Constants.dateFormat) }).ToList();

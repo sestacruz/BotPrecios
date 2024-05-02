@@ -40,7 +40,10 @@ namespace BotPrecios.Bots
                 products.AddRange(GetProducts(category));
             }
 
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Coto_{DateTime.Now:yyyyMMdd}.csv");
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"data-export\\{DateTime.Now:MMMM}");
+            if (!Directory.Exists(filePath))
+                Directory.CreateDirectory(filePath);
+            filePath = Path.Combine(filePath, $"{_superMarket}_{DateTime.Now:yyyyMMdd}.csv");
             File.WriteAllLines(filePath, products.Select(x => x.ToString()), Encoding.UTF8);
             _log.ConsoleLog($"Fin de la carga de datos. El archivo se encuentra en [{filePath}]", foreColor: ConsoleColor.DarkBlue);
 
@@ -112,7 +115,7 @@ namespace BotPrecios.Bots
                                 catch {  } //Producto no disponible
                             }
                         }
-
+                        price = Regex.Replace(price, @"[^\d.,]", "");
                         if (price.Contains('.'))
                             price = price.Split('.')[1].Length <= 2 ? price.Replace('.', ',') : price;
 

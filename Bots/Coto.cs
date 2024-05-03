@@ -111,8 +111,13 @@ namespace BotPrecios.Bots
                             try { price = item.FindElement(By.XPath(".//div[1]/div/div/div[3]/span")).Text; }
                             catch 
                             {
-                                try { price = item.FindElement(By.XPath(".//div[1]/div/div/div[2]/span")).Text; }
-                                catch {  } //Producto no disponible
+                                try 
+                                { 
+                                    price = item.FindElement(By.XPath(".//div[1]/div/div/div[2]/span")).Text;
+                                    if (price == "OFERTA")
+                                        price = item.FindElement(By.XPath(".//span[@class='price_discount']")).Text;
+                                }
+                                catch { } //Producto no disponible
                             }
                         }
                         price = Regex.Replace(price, @"[^\d.,]", "");

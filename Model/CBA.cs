@@ -71,34 +71,66 @@ namespace BotPrecios.Model
         public static List<CBA> GetCategoriesVariation()
         {
             DateTime firstDate = new(DateTime.Now.Year, DateTime.Now.Month, 1);
-            string sql = "SELECT Supermarket,Category, " +
-                         "CAST(((SUM(CASE WHEN PriceDate = @today THEN Price ELSE 0 END)  -" +
-                         " SUM(CASE WHEN PriceDate = @firstDate THEN Price ELSE 0 END)) * 100) / " +
-                         " SUM(CASE WHEN PriceDate = @today THEN Price ELSE 0 END) AS REAL) as variation " +
+            string sql = "SELECT Supermarket, Category, ROUND(SUM(Price),2) as Price, PriceDate " +
                          "FROM Products " +
-                         "WHERE PriceDate IN (@firstDate, @today) " +
-                         "GROUP BY Supermarket, Category " +
-                         (firstDate.Date != DateTime.Now.Date ? "HAVING COUNT(DISTINCT PriceDate) = 2;" : "");
+                         "WHERE PriceDate IN (@firstDate, @today) "+
+                         "GROUP BY Supermarket,Category,PriceDate";
             using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
             con.Open();
-            List<CBA> result = con.Query<CBA>(sql, new { today = DateTime.Now.ToString(Constants.dateFormat), firstDate = firstDate.ToString(Constants.dateFormat) }).ToList();
+            List<Product> products = con.Query<Product>(sql, new { today = DateTime.Now.ToString(Constants.dateFormat), firstDate = firstDate.ToString(Constants.dateFormat) }).ToList();
+            List<Product> todayProducts = products.Where(x => x.PriceDate == DateTime.Now.Date).ToList();
+            List<Product> firstDayProducts = products.Where(x => x.PriceDate == firstDate).ToList();
+
+            List<CBA> result = [];
+            foreach (Product product in firstDayProducts)
+            {
+                if (todayProducts.Exists(x => x.category == product.category))
+                {
+                    decimal todayPrice = (decimal)todayProducts.Where(x => x.category == product.category).First().price;
+                    decimal originalPrice = (decimal)product.price;
+                    decimal variation = decimal.Divide((todayPrice - originalPrice) * 100, originalPrice);
+                    result.Add(new CBA
+                    {
+                        Category = product.category,
+                        SuperMarket = product.superMarket,
+                        TotalPrice = todayPrice,
+                        Variation = variation
+                    });
+                }
+            }
             return result;
         }
 
         public static List<CBA> GetProductsVariation()
         {
             DateTime firstDate = new(DateTime.Now.Year, DateTime.Now.Month, 1);
-            string sql = "SELECT Supermarket,Name as product, " +
-                         "CAST(((SUM(CASE WHEN PriceDate = @today THEN Price ELSE 0 END)  -" +
-                         " SUM(CASE WHEN PriceDate = @firstDate THEN Price ELSE 0 END)) * 100) / " +
-                         " SUM(CASE WHEN PriceDate = @today THEN Price ELSE 0 END) AS REAL) as variation " +
+            string sql = "SELECT Supermarket,Name, Category, Price, PriceDate " +
                          "FROM Products " +
-                         "WHERE PriceDate IN (@firstDate, @today) " +
-                         "GROUP BY Supermarket, Name " +
-                         (firstDate.Date != DateTime.Now.Date ? "HAVING COUNT(DISTINCT PriceDate) = 2;" : "");
+                         "WHERE PriceDate IN (@firstDate, @today) ";
             using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
             con.Open();
-            List<CBA> result = con.Query<CBA>(sql, new { today = DateTime.Now.ToString(Constants.dateFormat), firstDate = firstDate.ToString(Constants.dateFormat) }).ToList();
+            List<Product> products = con.Query<Product>(sql, new { today = DateTime.Now.ToString(Constants.dateFormat), firstDate = firstDate.ToString(Constants.dateFormat) }).ToList();
+            List<Product> todayProducts = products.Where(x => x.PriceDate == DateTime.Now.Date).ToList();
+            List<Product> firstDayProducts = products.Where(x => x.PriceDate == firstDate).ToList();
+
+            List<CBA> result = [];
+            foreach (Product product in firstDayProducts)
+            {
+                if(todayProducts.Exists(x => x.name == product.name))
+                {
+                    decimal todayPrice = (decimal)todayProducts.Where(x => x.name == product.name).First().price;
+                    decimal originalPrice = (decimal)product.price;
+                    decimal variation = decimal.Divide((todayPrice - originalPrice) * 100, originalPrice);
+                    result.Add(new CBA
+                    {
+                        Category = product.category,
+                        Product = product.name,
+                        SuperMarket = product.superMarket,
+                        TotalPrice = todayPrice,
+                        Variation = variation
+                    });
+                }
+            }
             return result;
         }
 

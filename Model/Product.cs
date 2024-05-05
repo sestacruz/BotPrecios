@@ -11,6 +11,8 @@ namespace BotPrecios.Model
         public string name { get; set; }
         public string category { get; set; }
         public decimal? price { get; set; }
+        public string priceDate { get; set; }
+        public DateTime? PriceDate => priceDate == null ? null : DateTime.ParseExact(priceDate,"yyyy-MM-dd",null);
         public decimal variation { get; set; }
 
         public override string ToString()

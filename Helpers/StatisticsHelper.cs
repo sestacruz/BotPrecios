@@ -73,7 +73,7 @@ namespace BotPrecios.Helpers
                 logger.ConsoleLog($"[{LogHelper.GetCenteredLegend((i + 1).ToString(),20)}]|" +
                     $"{LogHelper.GetCenteredLegend(actualCBA[i].SuperMarket,20)}|" +
                     $"{LogHelper.GetCenteredLegend(actualCBA[i].Category, 20)}|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Variation.ToString("0.00"), 20)}%");
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Variation.ToString("+0.00;-0.00;0.00"), 20)}%");
                 top5postive.Add(actualCBA[i]);                
             }
             logger.ConsoleLog(new string('=', 83));
@@ -81,9 +81,9 @@ namespace BotPrecios.Helpers
             {
                 int index = actualCBA.Count - i;
                 logger.ConsoleLog($"[{LogHelper.GetCenteredLegend(((i * (-1)) + 6).ToString(), 20)}]|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[i].SuperMarket, 20)}|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Category, 20)}|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Variation.ToString("0.00"), 20)}%");
+                    $"{LogHelper.GetCenteredLegend(actualCBA[index].SuperMarket, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[index].Category, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[index].Variation.ToString("+0.00;-0.00;0.00"), 20)}%");
                 top5negative.Add(actualCBA[index]);
             }
         }
@@ -111,7 +111,7 @@ namespace BotPrecios.Helpers
                 logger.ConsoleLog($"[{LogHelper.GetCenteredLegend((i + 1).ToString(), 20)}]|" +
                     $"{LogHelper.GetCenteredLegend(actualCBA[i].SuperMarket, 20)}|" +
                     $"{LogHelper.GetCenteredLegend(actualCBA[i].Product, 20)}|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Variation.ToString("0.00"), 20)}%");
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Variation.ToString("+0.00;-0.00;0.00"), 20)}%");
                 top5postive.Add(actualCBA[i]);
             }
             logger.ConsoleLog(new string('=', 83));
@@ -119,9 +119,9 @@ namespace BotPrecios.Helpers
             {
                 int index = actualCBA.Count - i;
                 logger.ConsoleLog($"[{LogHelper.GetCenteredLegend(((i * (-1)) + 6).ToString(), 20)}]|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[i].SuperMarket, 20)}|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Product, 20)}|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Variation.ToString("0.00"), 20)}%");
+                    $"{LogHelper.GetCenteredLegend(actualCBA[index].SuperMarket, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[index].Product, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[index].Variation.ToString("+0.00;-0.00;0.00"), 20)}%");
                 top5negative.Add(actualCBA[index]);
             }
         }

@@ -19,8 +19,8 @@ namespace BotPrecios.Helpers
 
         public void ConsoleLog(string message, string errorLevel = Constants.ErrorLevel.Info, ConsoleColor foreColor = ConsoleColor.Gray, ConsoleColor backColor = ConsoleColor.Black)
         {
-            string log = $"[{DateTime.Now:yyyy/MM/dd HH:mm:ss}]-[{errorLevel}]- {message}";
-            string[] pieces = log.Split('-');
+            string log = $"[{DateTime.Now:yyyy/MM/dd HH:mm:ss}]|[{errorLevel}]| {message}";
+            string[] pieces = log.Split('|');
             bool error = errorLevel == Constants.ErrorLevel.Error;
 
             foreach (var piece in pieces)

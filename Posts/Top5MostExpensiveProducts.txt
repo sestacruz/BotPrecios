@@ -4,4 +4,4 @@
 2️⃣ [product2] ([smIcon2][superMarket2]) [varProduct2]
 3️⃣ [product3] ([smIcon3][superMarket3]) [varProduct3]
 4️⃣ [product4] ([smIcon4][superMarket4]) [varProduct4]
-5️⃣ [product5] ([smIcon4][superMarket5]) [varProduct5]
+5️⃣ [product5] ([smIcon5][superMarket5]) [varProduct5]

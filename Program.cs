@@ -67,9 +67,9 @@ if (option == "statistics" || string.IsNullOrEmpty(option))
 {
     List<CBA> CBAs = StatisticsHelper.GetCBAStatistics(logger);
     logger.ConsoleLog(" ");
-    StatisticsHelper.GetTop5Categories(logger, out List<CBA> topPositiveCat, out List<CBA> topNegativeCat);
+    StatisticsHelper.GetTop5Products(logger,out List<CBA> topPositiveProd, out List<CBA> topNegativeProd, out List<CBA> categoriesVariation);
     logger.ConsoleLog(" ");
-    StatisticsHelper.GetTop5Products(logger,out List<CBA> topPositiveProd, out List<CBA> topNegativeProd);
+    StatisticsHelper.GetTop5Categories(logger, categoriesVariation, out List<CBA> topPositiveCat, out List<CBA> topNegativeCat);
     logger.ConsoleLog(" ");
     StatisticsHelper.GetMostsCBAs(logger, CBAs,out string expensive,out string cheapest);
     if (!debug)

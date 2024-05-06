@@ -50,45 +50,7 @@ namespace BotPrecios.Helpers
             logger.ConsoleLog(new string('_', 60));
         }
 
-        public static void GetTop5Categories(ILogHelper logger, out List<CBA>top5postive, out List<CBA>top5negative)
-        {
-            top5postive = [];
-            top5negative = [];
-
-            logger.ConsoleLog(new string('_', 83));
-            logger.ConsoleLog(LogHelper.GetCenteredLegend("Tops 5 Categorias",83));
-            logger.ConsoleLog(new string('_', 83));
-            logger.ConsoleLog($"{LogHelper.GetCenteredLegend("#",20)}|" +
-                $"{LogHelper.GetCenteredLegend("Supermercado",20)}|" +
-                $"{LogHelper.GetCenteredLegend("Categoria",20)}|" +
-                $"{LogHelper.GetCenteredLegend("Variación",20)}");
-            logger.ConsoleLog(new string('_', 83));
-
-            List<CBA> actualCBA = CBA.GetCategoriesVariation();
-            //Se quitan las variaciones demasiado grandes, pueden ser causadas por errores en los datos
-            actualCBA = [.. actualCBA.Where(x => x.Variation < 1000).OrderBy(x => x.Variation)];
-
-            for (int i = 0; i < 5; i++)
-            {
-                logger.ConsoleLog($"[{LogHelper.GetCenteredLegend((i + 1).ToString(),20)}]|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[i].SuperMarket,20)}|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Category, 20)}|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Variation.ToString("+0.00;-0.00;0.00"), 20)}%");
-                top5postive.Add(actualCBA[i]);                
-            }
-            logger.ConsoleLog(new string('=', 83));
-            for (int i = 5; i >= 1; i--)
-            {
-                int index = actualCBA.Count - i;
-                logger.ConsoleLog($"[{LogHelper.GetCenteredLegend(((i * (-1)) + 6).ToString(), 20)}]|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[index].SuperMarket, 20)}|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[index].Category, 20)}|" +
-                    $"{LogHelper.GetCenteredLegend(actualCBA[index].Variation.ToString("+0.00;-0.00;0.00"), 20)}%");
-                top5negative.Add(actualCBA[index]);
-            }
-        }
-
-        public static void GetTop5Products(ILogHelper logger,out List<CBA> top5postive, out List<CBA> top5negative)
+        public static void GetTop5Products(ILogHelper logger,out List<CBA> top5postive, out List<CBA> top5negative, out List<CBA> categoriesVariation)
         {
             top5postive = [];
             top5negative = [];
@@ -102,7 +64,7 @@ namespace BotPrecios.Helpers
                 $"{LogHelper.GetCenteredLegend("Variación", 20)}");
             logger.ConsoleLog(new string('_', 83));
 
-            List<CBA> actualCBA = CBA.GetProductsVariation();
+            List<CBA> actualCBA = CBA.GetProductsVariation(out categoriesVariation);
             //Se quitan las variaciones demasiado grandes, pueden ser causadas por errores en los datos
             actualCBA = [.. actualCBA.Where(x => x.Variation < 1000).OrderBy(x => x.Variation)];
 
@@ -121,6 +83,44 @@ namespace BotPrecios.Helpers
                 logger.ConsoleLog($"[{LogHelper.GetCenteredLegend(((i * (-1)) + 6).ToString(), 20)}]|" +
                     $"{LogHelper.GetCenteredLegend(actualCBA[index].SuperMarket, 20)}|" +
                     $"{LogHelper.GetCenteredLegend(actualCBA[index].Product, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[index].Variation.ToString("+0.00;-0.00;0.00"), 20)}%");
+                top5negative.Add(actualCBA[index]);
+            }
+        }
+
+        public static void GetTop5Categories(ILogHelper logger, List<CBA> categoriesVariation, out List<CBA> top5postive, out List<CBA> top5negative)
+        {
+            top5postive = [];
+            top5negative = [];
+
+            logger.ConsoleLog(new string('_', 83));
+            logger.ConsoleLog(LogHelper.GetCenteredLegend("Tops 5 Categorias", 83));
+            logger.ConsoleLog(new string('_', 83));
+            logger.ConsoleLog($"{LogHelper.GetCenteredLegend("#", 20)}|" +
+                $"{LogHelper.GetCenteredLegend("Supermercado", 20)}|" +
+                $"{LogHelper.GetCenteredLegend("Categoria", 20)}|" +
+                $"{LogHelper.GetCenteredLegend("Variación", 20)}");
+            logger.ConsoleLog(new string('_', 83));
+
+            List<CBA> actualCBA = categoriesVariation;
+            //Se quitan las variaciones demasiado grandes, pueden ser causadas por errores en los datos
+            actualCBA = [.. actualCBA.Where(x => x.Variation < 1000).OrderBy(x => x.Variation)];
+
+            for (int i = 0; i < 5; i++)
+            {
+                logger.ConsoleLog($"[{LogHelper.GetCenteredLegend((i + 1).ToString(), 20)}]|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].SuperMarket, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Category, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[i].Variation.ToString("+0.00;-0.00;0.00"), 20)}%");
+                top5postive.Add(actualCBA[i]);
+            }
+            logger.ConsoleLog(new string('=', 83));
+            for (int i = 5; i >= 1; i--)
+            {
+                int index = actualCBA.Count - i;
+                logger.ConsoleLog($"[{LogHelper.GetCenteredLegend(((i * (-1)) + 6).ToString(), 20)}]|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[index].SuperMarket, 20)}|" +
+                    $"{LogHelper.GetCenteredLegend(actualCBA[index].Category, 20)}|" +
                     $"{LogHelper.GetCenteredLegend(actualCBA[index].Variation.ToString("+0.00;-0.00;0.00"), 20)}%");
                 top5negative.Add(actualCBA[index]);
             }

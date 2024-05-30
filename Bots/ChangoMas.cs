@@ -16,9 +16,9 @@ namespace BotPrecios.Bots
         private const string _superMarket = Constants.ChangoMas;
         private readonly ILogHelper _log;
 
-        public ChangoMas(ILogHelper log)
+        public ChangoMas(ILogHelper log, string chromeVersion)
         {
-            _co = new() { BrowserVersion = "124" };
+            _co = new() { BrowserVersion = chromeVersion };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
             driver = new ChromeDriver(_co);
@@ -28,6 +28,8 @@ namespace BotPrecios.Bots
 
         public List<Product> GetProductsData()
         {
+            _log.ConsoleLog($"Eliminando productos de ({_superMarket}) para el día {DateTime.Now.ToString(Constants.dateFormat)}", foreColor: ConsoleColor.Yellow);
+            Product.CleanProducts(_superMarket, DateTime.Now);
             _log.ConsoleLog($"({_superMarket})Comenzando la lectura de los productos de la CBA de [ChangoMas]",foreColor: ConsoleColor.Yellow);
             _log.ConsoleLog($"({_superMarket})Leyendo categorias");
             List<Category> changoCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\ChangoMas.json"));

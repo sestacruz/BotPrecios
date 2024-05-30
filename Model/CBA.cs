@@ -1,13 +1,6 @@
 ﻿using BotPrecios.Helpers;
 using Dapper;
-using OpenQA.Selenium.DevTools.V121.Tracing;
-using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BotPrecios.Model
 {
@@ -17,6 +10,7 @@ namespace BotPrecios.Model
         public string Category { get; set; }
         public string Product { get; set; }
         public decimal TotalPrice { get; set; }
+        public int ProductCount { get; set; }
         public decimal Variation { get; set; }
 
         public void GetAccumCBABySupermarket(string superMarket)
@@ -26,7 +20,7 @@ namespace BotPrecios.Model
             CBA cbaYesterday = new() { SuperMarket = superMarket};
 
             DateTime firstDay = new(DateTime.Now.Year, DateTime.Now.Month, 1);
-            string sql = "SELECT Supermarket,SUM(price) as totalPrice FROM Products " +
+            string sql = "SELECT Supermarket,SUM(price) as totalPrice, COUNT(*) as ProductCount FROM Products " +
                          "WHERE Supermarket = @superMarket " +
                          "AND Name IN @names " +
                          "AND UPPER(Category) = @category " +
@@ -61,9 +55,9 @@ namespace BotPrecios.Model
                     continue;
                 
                 if(resultToday != null )
-                    TotalPrice += resultToday.TotalPrice / item.names.Length;
+                    TotalPrice += resultToday.TotalPrice / resultToday.ProductCount;
                 if (resultYesterday != null)
-                    cbaYesterday.TotalPrice += resultYesterday.TotalPrice / item.names.Length;
+                    cbaYesterday.TotalPrice += resultYesterday.TotalPrice / resultYesterday.ProductCount;
             }
             Variation = CalculateVariation(TotalPrice, cbaYesterday.TotalPrice);
         }

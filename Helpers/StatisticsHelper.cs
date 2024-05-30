@@ -1,14 +1,7 @@
 ﻿using BotPrecios.Interfaces;
 using BotPrecios.Model;
 using Dapper;
-using OpenQA.Selenium.DevTools.V121.CSS;
-using OpenQA.Selenium.DevTools.V121.Target;
-using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BotPrecios.Helpers
 {

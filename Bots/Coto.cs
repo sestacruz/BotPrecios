@@ -17,9 +17,9 @@ namespace BotPrecios.Bots
         private const string _superMarket = Constants.Coto;
         private readonly ILogHelper _log;
 
-        internal Coto(ILogHelper log)
+        internal Coto(ILogHelper log, string chromeVersion)
         {
-            _co = new() { BrowserVersion = "124" };
+            _co = new() { BrowserVersion = chromeVersion };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
             driver = new ChromeDriver(_co);
@@ -28,6 +28,8 @@ namespace BotPrecios.Bots
 
         public List<Product> GetProductsData()
         {
+            _log.ConsoleLog($"Eliminando productos de ({_superMarket}) para el día {DateTime.Now.ToString(Constants.dateFormat)}", foreColor: ConsoleColor.White, backColor: ConsoleColor.Red);
+            Product.CleanProducts(_superMarket, DateTime.Now);
             _log.ConsoleLog($"({_superMarket})Comenzando la lectura de los productos de la CBA de [COTO]", foreColor: ConsoleColor.White, backColor: ConsoleColor.Red);
             _log.ConsoleLog($"({_superMarket})Leyendo categorias");
             List<Category> cotoCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Coto.json"));

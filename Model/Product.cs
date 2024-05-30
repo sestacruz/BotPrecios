@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System.ComponentModel.DataAnnotations;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace BotPrecios.Model
@@ -77,6 +78,16 @@ namespace BotPrecios.Model
             List<Product> products = con.Query<Product>(sql, parameters).ToList();
 
             return products;
+        }
+
+        public static void CleanProducts (string superMarket, DateTime date) 
+        {
+            using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
+            con.Open();
+            using var trx = con.BeginTransaction();
+            con.Execute($"DELETE FROM Products WHERE Supermarket = @superMarket AND PriceDate = @priceDate", 
+                new {superMarket, priceDate = date.ToString(Constants.dateFormat)});
+            trx.Commit();
         }
 
     }

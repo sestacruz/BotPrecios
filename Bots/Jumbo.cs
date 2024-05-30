@@ -16,9 +16,9 @@ namespace BotPrecios.Bots
         private const string _superMarket = Constants.Jumbo;
         private readonly ILogHelper _log;
 
-        public Jumbo(ILogHelper log) 
+        public Jumbo(ILogHelper log, string chromeVersion) 
         {
-            _co = new() { BrowserVersion = "124" };
+            _co = new() { BrowserVersion = chromeVersion };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
             driver = new ChromeDriver(_co);
@@ -28,6 +28,8 @@ namespace BotPrecios.Bots
 
         public List<Product> GetProductsData()
         {
+            _log.ConsoleLog($"Eliminando productos de ({_superMarket}) para el día {DateTime.Now.ToString(Constants.dateFormat)}", foreColor: ConsoleColor.White, backColor: ConsoleColor.Green);
+            Product.CleanProducts(_superMarket, DateTime.Now);
             _log.ConsoleLog($"({_superMarket})Comenzando la lectura de los productos de la CBA de [{_superMarket}]",foreColor:ConsoleColor.White,backColor:ConsoleColor.Green);
             _log.ConsoleLog($"({_superMarket}) Leyendo categorias");
             List<Category> jumboCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Jumbo.json"));

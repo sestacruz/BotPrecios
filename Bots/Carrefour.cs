@@ -17,9 +17,9 @@ namespace BotPrecios.Bots
         private const string _superMarket = Constants.Carrefour;
         private readonly ILogHelper _log;
 
-        internal Carrefour(ILogHelper log) 
+        internal Carrefour(ILogHelper log, string chromeVersion)
         {
-            _co = new() { BrowserVersion = "124" };
+            _co = new() { BrowserVersion = chromeVersion };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
             driver = new ChromeDriver(_co);
@@ -29,10 +29,12 @@ namespace BotPrecios.Bots
 
         public List<Product> GetProductsData()
         {
+            _log.ConsoleLog($"Eliminando productos de ({_superMarket}) para el día {DateTime.Now.ToString(Constants.dateFormat)}", foreColor: ConsoleColor.Blue);
+            Product.CleanProducts(_superMarket, DateTime.Now);
             _log.ConsoleLog($"({_superMarket})Comenzando la lectura de los productos de la CBA de [Carrefour]", foreColor:ConsoleColor.Blue);
             _log.ConsoleLog($"({_superMarket})Leyendo categorias");
             List<Category> carrefourCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Carrefour.json"));
-            List<Product> products = new List<Product>();
+            List<Product> products = [];
 
             _log.ConsoleLog($"({_superMarket})Configurando Navegador");
             foreach (var category in carrefourCategories)
@@ -90,34 +92,39 @@ namespace BotPrecios.Bots
             int actualPage = 1;
             while (actualPage <= pageCount)
             {
-                if (actualPage > 1)
-                {
-                    driver.Navigate().GoToUrl($"{category.url}?page={actualPage}");
-                    Thread.Sleep(2000);
-                }
-                _log.ConsoleLog($"({_superMarket})Leyendo pagina {actualPage}/{pageCount}");
-
-                int cicles = 0;
-                while (cicles < 2)
-                {
-                    IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-                    js.ExecuteScript("window.scrollBy(0, window.innerHeight)", "");
-                    Thread.Sleep(300);
-                    cicles++;
-                }
-                Thread.Sleep(1500);
-                var productos = driver.FindElements(By.ClassName("valtech-carrefourar-search-result-0-x-galleryItem"));
                 try
                 {
-                    var findedProducts = productos.Select(x => new Product
+                    if (actualPage > 1)
                     {
-                        superMarket = _superMarket,
-                        name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text,
-                        category = category.name,
-                        price = Convert.ToDecimal(Regex.Replace(x.FindElement(By.ClassName("valtech-carrefourar-product-price-0-x-currencyContainer")).Text, @"[^\d,]", ""))
-                    }).ToList();
-                    products.AddRange(findedProducts);
-                    Product.AddAllToDataBase(findedProducts);
+                        driver.Navigate().GoToUrl($"{category.url}?page={actualPage}");
+                        Thread.Sleep(2000);
+                    }
+                    _log.ConsoleLog($"({_superMarket})Leyendo pagina {actualPage}/{pageCount}");
+
+                    int cicles = 0;
+                    while (cicles < 2)
+                    {
+                        IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                        js.ExecuteScript("window.scrollBy(0, window.innerHeight)", "");
+                        Thread.Sleep(300);
+                        cicles++;
+                    }
+                    Thread.Sleep(1500);
+                    var productos = driver.FindElements(By.ClassName("valtech-carrefourar-search-result-0-x-galleryItem"));
+                    try
+                    {
+                        var findedProducts = productos.Select(x => new Product
+                        {
+                            superMarket = _superMarket,
+                            name = x.FindElement(By.ClassName("vtex-product-summary-2-x-productBrand")).Text,
+                            category = category.name,
+                            price = Convert.ToDecimal(Regex.Replace(x.FindElement(By.ClassName("valtech-carrefourar-product-price-0-x-currencyContainer")).Text, @"[^\d,]", ""))
+                        }).ToList();
+                        products.AddRange(findedProducts);
+                        Product.AddAllToDataBase(findedProducts);
+                    }
+                    catch { continue; }
+                    finally { actualPage++; }
                 }
                 catch { continue; }
                 finally { actualPage++; }

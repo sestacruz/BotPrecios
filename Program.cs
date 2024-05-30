@@ -3,8 +3,10 @@ using BotPrecios.Helpers;
 using BotPrecios.Interfaces;
 using BotPrecios.Model;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Win32;
+using System.Diagnostics;
 
-string option = string.Empty;
+string option = string.Empty, chromeVersion = string.Empty;
 LogHelper logger = new("General");
 
 if (args.Length > 0)
@@ -21,13 +23,18 @@ builder.SetBasePath(Directory.GetCurrentDirectory())
 
 IConfiguration config = builder.Build();
 
+object path;
+path = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe", "", null);
+if (path != null)
+    chromeVersion = FileVersionInfo.GetVersionInfo(path.ToString()).FileVersion.Split('.')[0];
+
 List<Product> products = [];
 IBot[] bots =
     [
-        new Jumbo(new LogHelper(Constants.Jumbo)),
-        new ChangoMas(new LogHelper(Constants.ChangoMas)),
-        new Carrefour(new LogHelper(Constants.Carrefour)),
-        new Coto(new LogHelper(Constants.Coto))
+        new Jumbo(new LogHelper(Constants.Jumbo),chromeVersion),
+        new ChangoMas(new LogHelper(Constants.ChangoMas),chromeVersion),
+        new Carrefour(new LogHelper(Constants.Carrefour),chromeVersion),
+        new Coto(new LogHelper(Constants.Coto),chromeVersion)
     ];
 
 if (!string.IsNullOrEmpty(option))

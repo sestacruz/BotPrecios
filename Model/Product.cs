@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
@@ -80,14 +81,45 @@ namespace BotPrecios.Model
             return products;
         }
 
-        public static void CleanProducts (string superMarket, DateTime date) 
+        public static async Task CleanProducts(string superMarket, DateTime date)
         {
-            using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
-            con.Open();
-            using var trx = con.BeginTransaction();
-            con.Execute($"DELETE FROM Products WHERE Supermarket = @superMarket AND PriceDate = @priceDate", 
-                new {superMarket, priceDate = date.ToString(Constants.dateFormat)});
-            trx.Commit();
+            string connectionString = $"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite";
+            await ExecuteWithRetryAsync(async transaction =>
+            {
+                var parameters = new { superMarket, priceDate = date.ToString(Constants.dateFormat) };
+                string sql = "DELETE FROM Products WHERE Supermarket = @superMarket AND PriceDate = @priceDate";
+                await transaction.Connection.ExecuteAsync(sql, parameters, transaction);
+            }, connectionString);
+        }
+
+        private static async Task ExecuteWithRetryAsync(Func<IDbTransaction, Task> action, string connectionString, int maxRetries = 5)
+        {
+            using var connection = new SQLiteConnection(connectionString);
+            await connection.OpenAsync();
+            using var transaction = connection.BeginTransaction();
+            int retries = 0;
+            while (true)
+            {
+                try
+                {
+                    await action(transaction);
+                    transaction.Commit();
+                    break;
+                }
+                catch (SQLiteException ex) when (ex.ResultCode == SQLiteErrorCode.Busy || ex.ResultCode == SQLiteErrorCode.Locked)
+                {
+                    retries++;
+                    if (retries >= maxRetries)
+                        throw;
+
+                    await Task.Delay(100 * (int)Math.Pow(2, retries));
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
     }

@@ -26,20 +26,20 @@ namespace BotPrecios.Bots
             _log = log;
         }
 
-        public List<Product> GetProductsData()
+        public async Task<List<Product>> GetProductsData()
         {
             _log.ConsoleLog($"Eliminando productos de ({_superMarket}) para el día {DateTime.Now.ToString(Constants.dateFormat)}", foreColor: ConsoleColor.Yellow);
-            Product.CleanProducts(_superMarket, DateTime.Now);
+            await Product.CleanProducts(_superMarket, DateTime.Now);
             _log.ConsoleLog($"({_superMarket})Comenzando la lectura de los productos de la CBA de [ChangoMas]",foreColor: ConsoleColor.Yellow);
             _log.ConsoleLog($"({_superMarket})Leyendo categorias");
             List<Category> changoCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\ChangoMas.json"));
-            List<Product> products = new List<Product>();
+            List<Product> products = [];
 
             _log.ConsoleLog($"({_superMarket})({_superMarket})Configurando Navegador");
             foreach (var category in changoCategories)
             {
                 category.AddToDatabase("ChangoMas");
-                products.AddRange(GetProducts(category));
+                products.AddRange(await GetProducts(category));
             }
 
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"data-export\\{DateTime.Now:MMMM}");
@@ -52,7 +52,7 @@ namespace BotPrecios.Bots
             return products;
         }
 
-        public List<Product> GetProducts(Category category)
+        public Task<List<Product>> GetProducts(Category category)
         {
             driver.Navigate().GoToUrl(category.url);
 
@@ -78,9 +78,9 @@ namespace BotPrecios.Bots
             return (GetProductsInfo(category, totalProducts));
         }
 
-        private List<Product> GetProductsInfo(Category category, int productsCount)
+        private async Task<List<Product>> GetProductsInfo(Category category, int productsCount)
         {
-            List<Product> products = new List<Product>();
+            List<Product> products = [];
             int pageCount = (int)Math.Round(decimal.Divide(productsCount,24),0,MidpointRounding.ToPositiveInfinity);
             int actualPage = 1;
             while (actualPage <= pageCount)

@@ -49,10 +49,13 @@ List<Task<List<Product>>> tasks = [];
 foreach (var bot in bots)
 {
     logger.ConsoleLog($"Inciando bot {bot.GetType().Name}");
-    tasks.Add(Task.Run(() =>
+    tasks.Add(Task.Run( async () =>
     {
-        List<Product> botProducts = bot.GetProductsData();
+        logger.ConsoleLog($"Obteniendo datos para {bot.GetType().Name}");
+        List<Product> botProducts = await bot.GetProductsData();
+        logger.ConsoleLog($"Datos obtenidos para {bot.GetType().Name}. Disposing...");
         bot.Dispose();
+        logger.ConsoleLog($"Dispose completado para {bot.GetType().Name}");
         return botProducts;
     }));
 }

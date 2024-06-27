@@ -4,7 +4,7 @@ namespace BotPrecios.Interfaces
 {
     public interface IBot
     {
-        public List<Product> GetProductsData();
+        public Task<List<Product>> GetProductsData();
         public void Dispose();
     }
 }

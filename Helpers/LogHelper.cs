@@ -8,6 +8,7 @@ namespace BotPrecios.Helpers
     internal class LogHelper : ILogHelper
     {
         private readonly string _logPath;
+        private static readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 
         public LogHelper(string name)
         {
@@ -17,7 +18,7 @@ namespace BotPrecios.Helpers
             _logPath += $"{DateTime.Now:yyyyMMdd}_{name}.log";
         }
 
-        public void ConsoleLog(string message, string errorLevel = Constants.ErrorLevel.Info, ConsoleColor foreColor = ConsoleColor.Gray, ConsoleColor backColor = ConsoleColor.Black)
+        public async Task ConsoleLog(string message, string errorLevel = Constants.ErrorLevel.Info, ConsoleColor foreColor = ConsoleColor.Gray, ConsoleColor backColor = ConsoleColor.Black)
         {
             string log = $"[{DateTime.Now:yyyy/MM/dd HH:mm:ss}]|[{errorLevel}]| {message}";
             string[] pieces = log.Split('|');
@@ -73,7 +74,21 @@ namespace BotPrecios.Helpers
                 Console.ResetColor();
             }
             Console.WriteLine();
-            File.AppendAllLines(_logPath, [log]);
+            await WriteLogAsync(log);
+            //File.AppendAllLines(_logPath, [log]);
+        }
+
+        private async Task WriteLogAsync(string log)
+        {
+            await semaphore.WaitAsync();
+            try
+            {
+                await File.AppendAllLinesAsync(_logPath, [log]);
+            }
+            finally
+            {
+                semaphore.Release();
+            }
         }
 
         private static void WriteColor(string message, ConsoleColor foreColor, ConsoleColor backColor = ConsoleColor.Black)

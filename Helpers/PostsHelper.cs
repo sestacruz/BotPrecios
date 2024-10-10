@@ -1,6 +1,5 @@
 ﻿using BotPrecios.Bots;
 using BotPrecios.Model;
-using Newtonsoft.Json;
 using System.Net;
 using System.Security.Policy;
 
@@ -161,7 +160,7 @@ namespace BotPrecios.Helpers
         private XResponse SendPostRequest()
         {
             HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(_url);
-            var jsonRQ = JsonConvert.SerializeObject(new { text = _message });
+            var jsonRQ = System.Text.Json.JsonSerializer.Serialize(new { text = _message });
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(jsonRQ);
             webRequest.ContentType = "application/json; charset=utf-8";
             webRequest.ContentLength = bytes.Length;
@@ -174,7 +173,7 @@ namespace BotPrecios.Helpers
             response = (HttpWebResponse)webRequest.GetResponse();
             Stream responseStream = response.GetResponseStream();
             string responseString = new StreamReader(responseStream).ReadToEnd();
-            return JsonConvert.DeserializeObject<XResponse>(responseString);
+            return System.Text.Json.JsonSerializer.Deserialize<XResponse>(responseString);
         }
 
     }

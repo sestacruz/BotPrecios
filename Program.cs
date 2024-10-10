@@ -6,11 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using System.Diagnostics;
 
-string option = string.Empty, chromeVersion = string.Empty;
+string option = string.Empty, chromeVersion = string.Empty, lastCategory = string.Empty;
 LogHelper logger = new("General");
 
 if (args.Length > 0)
+{
     option = args[0];
+    lastCategory = args.Length > 1 ? args[1] : null;
+}
 
 bool debug = false;
 #if DEBUG
@@ -31,10 +34,10 @@ if (path != null)
 List<Product> products = [];
 IBot[] bots =
     [
-        new Jumbo(new LogHelper(Constants.Jumbo),chromeVersion),
-        new ChangoMas(new LogHelper(Constants.ChangoMas),chromeVersion),
-        new Carrefour(new LogHelper(Constants.Carrefour),chromeVersion),
-        new Coto(new LogHelper(Constants.Coto),chromeVersion)
+        new Jumbo(new LogHelper(Constants.Jumbo),chromeVersion,lastCategory),
+        new ChangoMas(new LogHelper(Constants.ChangoMas),chromeVersion,lastCategory),
+        new Carrefour(new LogHelper(Constants.Carrefour),chromeVersion,lastCategory),
+        new Coto(new LogHelper(Constants.Coto),chromeVersion,lastCategory)
     ];
 
 if (!string.IsNullOrEmpty(option))

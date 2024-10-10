@@ -109,8 +109,8 @@ namespace BotPrecios.Model
                             ) AS p2
                             ON p1.Name = p2.Name AND p1.Category = p2.Category AND p1.Supermarket = p2.Supermarket
                             WHERE p1.PriceDate = @today
-                            AND p1.Price >= 0
-                            AND p2.Price >= 0;";
+                            AND p1.Price > 0
+                            AND p2.Price > 0;";
             using var con = new SQLiteConnection($"Data Source={AppDomain.CurrentDomain.BaseDirectory}Precios.sqlite");
             con.Open();
 

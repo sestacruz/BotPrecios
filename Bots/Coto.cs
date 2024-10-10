@@ -16,20 +16,25 @@ namespace BotPrecios.Bots
         private IWebDriver driver;
         private const string _superMarket = Constants.Coto;
         private readonly ILogHelper _log;
+        private string _lastCategory;
 
-        internal Coto(ILogHelper log, string chromeVersion)
+        internal Coto(ILogHelper log, string chromeVersion,string lastCategory = null)
         {
             _co = new() { BrowserVersion = chromeVersion };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
             driver = new ChromeDriver(_co);
             _log = log;
+            _lastCategory = lastCategory;
         }
 
         public async Task<List<Product>> GetProductsData()
         {
-            _log.ConsoleLog($"Eliminando productos de ({_superMarket}) para el día {DateTime.Now.ToString(Constants.dateFormat)}", foreColor: ConsoleColor.White, backColor: ConsoleColor.Red);
-            await Product.CleanProducts(_superMarket, DateTime.Now);
+            if (string.IsNullOrEmpty(_lastCategory))
+            {
+                _log.ConsoleLog($"Eliminando productos de ({_superMarket}) para el día {DateTime.Now.ToString(Constants.dateFormat)}", foreColor: ConsoleColor.White, backColor: ConsoleColor.Red);
+                await Product.CleanProducts(_superMarket, DateTime.Now);
+            }
             _log.ConsoleLog($"({_superMarket})Comenzando la lectura de los productos de la CBA de [COTO]", foreColor: ConsoleColor.White, backColor: ConsoleColor.Red);
             _log.ConsoleLog($"({_superMarket})Leyendo categorias");
             List<Category> cotoCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Coto.json"));
@@ -38,8 +43,14 @@ namespace BotPrecios.Bots
             _log.ConsoleLog($"({_superMarket})Configurando Navegador");
             foreach (var category in cotoCategories)
             {
-                category.AddToDatabase("Coto");
-                products.AddRange(await GetProducts(category));
+                if (!string.IsNullOrEmpty(_lastCategory) && category.name != _lastCategory)
+                    continue;
+                else
+                {
+                    _lastCategory = null;
+                    category.AddToDatabase("Coto");
+                    products.AddRange(await GetProducts(category));
+                }
             }
 
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"data-export\\{DateTime.Now:MMMM}");

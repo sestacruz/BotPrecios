@@ -15,8 +15,9 @@ namespace BotPrecios.Bots
         private IWebDriver driver;
         private const string _superMarket = Constants.ChangoMas;
         private readonly ILogHelper _log;
+        private string _lastCategory;
 
-        public ChangoMas(ILogHelper log, string chromeVersion)
+        public ChangoMas(ILogHelper log, string chromeVersion, string lastCategory = null)
         {
             _co = new() { BrowserVersion = chromeVersion };
             _co.AddArgument("--start-maximized");
@@ -24,12 +25,16 @@ namespace BotPrecios.Bots
             driver = new ChromeDriver(_co);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             _log = log;
+            _lastCategory = lastCategory;
         }
 
         public async Task<List<Product>> GetProductsData()
         {
-            _log.ConsoleLog($"Eliminando productos de ({_superMarket}) para el día {DateTime.Now.ToString(Constants.dateFormat)}", foreColor: ConsoleColor.Yellow);
-            await Product.CleanProducts(_superMarket, DateTime.Now);
+            if (string.IsNullOrEmpty(_lastCategory))
+            {
+                _log.ConsoleLog($"Eliminando productos de ({_superMarket}) para el día {DateTime.Now.ToString(Constants.dateFormat)}", foreColor: ConsoleColor.Yellow);
+                await Product.CleanProducts(_superMarket, DateTime.Now);
+            }
             _log.ConsoleLog($"({_superMarket})Comenzando la lectura de los productos de la CBA de [ChangoMas]",foreColor: ConsoleColor.Yellow);
             _log.ConsoleLog($"({_superMarket})Leyendo categorias");
             List<Category> changoCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\ChangoMas.json"));
@@ -38,8 +43,14 @@ namespace BotPrecios.Bots
             _log.ConsoleLog($"({_superMarket})({_superMarket})Configurando Navegador");
             foreach (var category in changoCategories)
             {
-                category.AddToDatabase("ChangoMas");
-                products.AddRange(await GetProducts(category));
+                if (!string.IsNullOrEmpty(_lastCategory) && category.name != _lastCategory)
+                    continue;
+                else
+                {
+                    _lastCategory = null;
+                    category.AddToDatabase("ChangoMas");
+                    products.AddRange(await GetProducts(category));
+                }
             }
 
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"data-export\\{DateTime.Now:MMMM}");

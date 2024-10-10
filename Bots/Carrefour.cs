@@ -16,8 +16,9 @@ namespace BotPrecios.Bots
         private bool cookiesAccepted = false;
         private const string _superMarket = Constants.Carrefour;
         private readonly ILogHelper _log;
+        private string _lastCategory;
 
-        internal Carrefour(ILogHelper log, string chromeVersion)
+        internal Carrefour(ILogHelper log, string chromeVersion, string lastCategory = null)
         {
             _co = new() { BrowserVersion = chromeVersion };
             _co.AddArgument("--start-maximized");
@@ -25,12 +26,16 @@ namespace BotPrecios.Bots
             driver = new ChromeDriver(_co);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             _log = log;
+            _lastCategory = lastCategory;
         }
 
         public async Task<List<Product>> GetProductsData()
         {
-            _log.ConsoleLog($"Eliminando productos de ({_superMarket}) para el día {DateTime.Now.ToString(Constants.dateFormat)}", foreColor: ConsoleColor.Blue);
-            await Product.CleanProducts(_superMarket, DateTime.Now);
+            if (string.IsNullOrEmpty(_lastCategory))
+            {
+                _log.ConsoleLog($"Eliminando productos de ({_superMarket}) para el día {DateTime.Now.ToString(Constants.dateFormat)}", foreColor: ConsoleColor.Blue);
+                await Product.CleanProducts(_superMarket, DateTime.Now);
+            }
             _log.ConsoleLog($"({_superMarket})Comenzando la lectura de los productos de la CBA de [Carrefour]", foreColor:ConsoleColor.Blue);
             _log.ConsoleLog($"({_superMarket})Leyendo categorias");
             List<Category> carrefourCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\Carrefour.json"));
@@ -39,8 +44,14 @@ namespace BotPrecios.Bots
             _log.ConsoleLog($"({_superMarket})Configurando Navegador");
             foreach (var category in carrefourCategories)
             {
-                category.AddToDatabase("Carrefour");
-                products.AddRange(await GetProducts(category));
+                if (!string.IsNullOrEmpty(_lastCategory) && category.name != _lastCategory)
+                    continue;
+                else
+                {
+                    _lastCategory = null;
+                    category.AddToDatabase("Carrefour");
+                    products.AddRange(await GetProducts(category));
+                }
             }
 
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"data-export\\{DateTime.Now:MMMM}");
@@ -72,7 +83,7 @@ namespace BotPrecios.Bots
                 if (attemps > 0)
                     Thread.Sleep(500);
 
-                var productos = driver.FindElement(By.ClassName("valtech-carrefourar-search-result-0-x-totalProducts--layout")).Text;
+                var productos = driver.FindElement(By.ClassName("valtech-carrefourar-search-result-2-x-totalProducts--layout")).Text;
                 _ = int.TryParse(productos.Split(" ")[0].Trim(), out totalProducts);
                 _log.ConsoleLog($"({_superMarket})Se encontraron [{totalProducts}] productos para la categoria", foreColor: totalProducts == 0 ? ConsoleColor.Red : ConsoleColor.White);
 

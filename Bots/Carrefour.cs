@@ -121,7 +121,7 @@ namespace BotPrecios.Bots
                         cicles++;
                     }
                     Thread.Sleep(1500);
-                    var productos = driver.FindElements(By.ClassName("valtech-carrefourar-search-result-0-x-galleryItem"));
+                    var productos = driver.FindElements(By.ClassName("valtech-carrefourar-search-result-2-x-galleryItem"));
                     try
                     {
                         var findedProducts = productos.Select(x => new Product
@@ -135,7 +135,6 @@ namespace BotPrecios.Bots
                         Product.AddAllToDataBase(findedProducts);
                     }
                     catch { continue; }
-                    finally { actualPage++; }
                 }
                 catch { continue; }
                 finally { actualPage++; }

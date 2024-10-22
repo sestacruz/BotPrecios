@@ -82,7 +82,7 @@ namespace BotPrecios.Model
                 {
                     decimal todayPrice = (decimal)todayProducts.Where(x => x.category == product.category).First().price;
                     decimal originalPrice = (decimal)product.price;
-                    decimal variation = decimal.Divide((todayPrice - originalPrice) * 100, originalPrice);
+                    decimal variation = CalculateVariation(todayPrice,originalPrice);
                     result.Add(new CBA
                     {
                         Category = product.category,
@@ -121,7 +121,7 @@ namespace BotPrecios.Model
                    Product = p.name,
                    SuperMarket = p.superMarket,
                    TotalPrice = p.todayPrice,
-                   Variation = decimal.Divide((p.todayPrice - (decimal)p.price) * 100, (decimal)p.price)
+                   Variation = CalculateVariation(p.todayPrice,(decimal)p.price)
                })
                .ToList();
 
@@ -139,7 +139,7 @@ namespace BotPrecios.Model
 
         private static decimal CalculateVariation(decimal actualPrice, decimal previousPrice)
         {
-            return actualPrice == 0 ? 0 : decimal.Divide((previousPrice - actualPrice) *100,actualPrice);
+            return actualPrice == 0 ? 0 : decimal.Divide((actualPrice- previousPrice) *100, previousPrice);
         }
     }
 

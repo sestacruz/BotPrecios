@@ -2,7 +2,7 @@
   "profiles": {
     "BotPrecios": {
       "commandName": "Project",
-      "commandLineArgs": "Carrefour"
+      "commandLineArgs": "statistics"
     }
   }
 }

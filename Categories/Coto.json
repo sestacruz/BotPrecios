@@ -1,110 +1,110 @@
 [
   {
     "name": "Pan",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-panaderia-panaderia-propia/_/N-1s5i92o"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-panaderia-panificados/_/N-1sv7ob1"
   },
   {
     "name": "Galletitas saladas",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-panaderia-galletitas-galletitas-crackers/_/N-2dfsf6"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-panaderia-galletitas-galletitas-crackers/_/N-2dfsf6?Nf=product.endDate%7CGTEQ%201.7306784E12%7C%7Cproduct.startDate%7CLTEQ%201.7306784E12&Nr=AND(product.sDisp_200:1004,product.language:espa%C3%B1ol,OR(product.siteId:CotoDigital))"
   },
   {
     "name": "Galletitas dulces",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-panaderia-galletitas-galletitas-dulces/_/N-1n6o2ww"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-panaderia-galletitas-galletitas-dulces/_/N-1n6o2ww?Nf=product.endDate%7CGTEQ%201.7306784E12%7C%7Cproduct.startDate%7CLTEQ%201.7306784E12&Nr=AND(product.sDisp_200:1004,product.language:espa%C3%B1ol,OR(product.siteId:CotoDigital))"
   },
   {
     "name": "Arroz",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-arroz-y-legumbres-arroz/_/N-149fj7g"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-arroz-y-legumbres-arroz/_/N-149fj7g"
   },
   {
     "name": "Harina de trigo",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-harinas-harina-de-trigo/_/N-14jn5rm"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-harinas-harina-de-trigo/_/N-14jn5rm"
   },
   {
     "name": "Harina de maiz",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-harinas-harina-de-ma%C3%ADz/_/N-i6ajfm"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-harinas-harina-de-ma%C3%ADz/_/N-i6ajfm"
   },
   {
     "name": "Fideos",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-pasta-seca-lista-y-rellenas-pastas-secas/_/N-f258hq"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-pasta-seca-lista-y-rellenas-pastas-secas/_/N-f258hq"
   },
   {
     "name": "Verduras",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-frescos-frutas-y-verduras-verduras/_/N-1vh8n7u"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-frescos-frutas-y-verduras-verduras/_/N-1vh8n7u"
   },
   {
     "name": "Endulzantes",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-endulzantes/_/N-1rtbab6"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-endulzantes/_/N-1rtbab6"
   },
   {
     "name": "Mermeladas",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-mermeladas-y-dulces-mermeladas/_/N-va3r6f"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-mermeladas-y-dulces/_/N-mj4aa8"
   },
   {
     "name": "Legumbres",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-arroz-y-legumbres-legumbres/_/N-4trlda"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-arroz-y-legumbres-legumbres/_/N-4trlda"
   },
   {
     "name": "Frutas",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-frescos-frutas-y-verduras-frutas/_/N-1edtocx"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-frescos-frutas-y-verduras-frutas/_/N-1edtocx"
   },
   {
     "name": "Carnes",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-frescos-carniceria-carnes/_/N-1uhue0v"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-frescos-carniceria-carnes/_/N-1uhue0v"
   },
   {
     "name": "Fiambres",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-frescos-fiambres-fiambres/_/N-11vgf3l"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-frescos-fiambres-fiambres/_/N-11vgf3l"
   },
   {
     "name": "Huevos",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-frescos-huevos/_/N-mtdtw6"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-frescos-huevos/_/N-mtdtw6"
   },
   {
     "name": "Leche",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-frescos-l%C3%A1cteos-leches/_/N-zpvqr7"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-frescos-l%C3%A1cteos-leches/_/N-zpvqr7"
   },
   {
     "name": "Quesos",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-frescos-quesos/_/N-1d0721n"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-frescos-quesos/_/N-1d0721n"
   },
   {
     "name": "Yogures",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-frescos-l%C3%A1cteos-yogures/_/N-rfedtp"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-frescos-l%C3%A1cteos-yogures/_/N-rfedtp"
   },
   {
     "name": "Manteca",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-frescos-l%C3%A1cteos-mantecas-y-margarinas/_/N-k4p4ks"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-frescos-l%C3%A1cteos-mantecas-y-margarinas/_/N-k4p4ks?Nf=product.endDate%7CGTEQ%201.7306784E12%7C%7Cproduct.startDate%7CLTEQ%201.7306784E12&Nr=AND(product.sDisp_200:1004,product.language:espa%C3%B1ol,OR(product.siteId:CotoDigital))"
   },
   {
     "name": "Aceites",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-aceites-y-condimentos-aceites/_/N-16r0nc0"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-aceites-y-condimentos-aceites/_/N-16r0nc0"
   },
   {
     "name": "Bebidas sin Alcohol",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-bebidas-bebidas-sin-alcohol/_/N-j9f2pv"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-bebidas-bebidas-sin-alcohol/_/N-j9f2pv"
   },
   {
     "name": "Bebidas con Alcohol",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-bebidas-bebidas-con-alcohol/_/N-4hulsc"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-bebidas-bebidas-con-alcohol/_/N-4hulsc"
   },
   {
     "name": "Sal",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-aceites-y-condimentos-condimentos-sal/_/N-zh9k4"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-aceites-y-condimentos-condimentos-sal/_/N-zh9k4?Nf=product.endDate%7CGTEQ%201.7306784E12%7C%7Cproduct.startDate%7CLTEQ%201.7306784E12&Nr=AND(product.sDisp_200:1004,product.language:espa%C3%B1ol,OR(product.siteId:CotoDigital))"
   },
   {
     "name": "Especias",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-especias-especias/_/N-1arvz2p"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-especias-especias/_/N-1arvz2p"
   },
   {
     "name": "Vinagre",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-aceites-y-condimentos-vinagres/_/N-1a5jpj4"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-aceites-y-condimentos-vinagres/_/N-1a5jpj4"
   },
   {
     "name": "Cafe",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-infusiones-caf%C3%A9/_/N-1cgicr5"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-infusiones-caf%C3%A9/_/N-1cgicr5"
   },
   {
     "name": "Yerba",
-    "url": "https://www.cotodigital3.com.ar/sitios/cdigi/browse/catalogo-almac%C3%A9n-infusiones-mate/_/N-vra9dh"
+    "url": "https://api.cotodigital.com.ar/sitios/cdigi/categoria/catalogo-almac%C3%A9n-infusiones-mate/_/N-vra9dh"
   }
 ]

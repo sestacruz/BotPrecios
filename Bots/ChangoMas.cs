@@ -40,7 +40,7 @@ namespace BotPrecios.Bots
             List<Category> changoCategories = Utilities.LoadJSONFile<Category>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Categories\\ChangoMas.json"));
             List<Product> products = [];
 
-            _log.ConsoleLog($"({_superMarket})({_superMarket})Configurando Navegador");
+            _log.ConsoleLog($"({_superMarket})Configurando Navegador");
             foreach (var category in changoCategories)
             {
                 if (!string.IsNullOrEmpty(_lastCategory) && category.name != _lastCategory)
@@ -58,7 +58,7 @@ namespace BotPrecios.Bots
                 Directory.CreateDirectory(filePath);
             filePath = Path.Combine(filePath, $"{_superMarket}_{DateTime.Now:yyyyMMdd}.csv");
             File.WriteAllLines(filePath, products.Select(x => x.ToString()), Encoding.UTF8);
-            _log.ConsoleLog($"({_superMarket})Fin de la carga de datos. El archivo se encuentra en [{filePath}]", foreColor: ConsoleColor.DarkBlue);
+            _log.ConsoleLog($"({_superMarket}) Fin de la carga de datos. El archivo se encuentra en [{filePath}]", foreColor: ConsoleColor.DarkBlue);
 
             return products;
         }

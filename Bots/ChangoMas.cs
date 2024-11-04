@@ -2,9 +2,10 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System.Text;
-using BotPrecios.Interfaces;
 using System.Text.RegularExpressions;
-using BotPrecios.Helpers;
+using BotPrecios.Services;
+using Microsoft.Extensions.Configuration;
+using BotPrecios.Logging;
 
 
 namespace BotPrecios.Bots
@@ -12,13 +13,15 @@ namespace BotPrecios.Bots
     internal class ChangoMas : IDisposable, IBot
     {
         private ChromeOptions _co;
+        private IConfiguration _configuration;
         private IWebDriver driver;
         private const string _superMarket = Constants.ChangoMas;
-        private readonly ILogHelper _log;
+        private readonly ILogService _log;
         private string _lastCategory;
 
-        public ChangoMas(ILogHelper log, string chromeVersion, string lastCategory = null)
+        public ChangoMas(ILogService log,IConfiguration configuration, string chromeVersion, string lastCategory = null)
         {
+            _configuration = configuration;
             _co = new() { BrowserVersion = chromeVersion };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
@@ -48,7 +51,8 @@ namespace BotPrecios.Bots
                 else
                 {
                     _lastCategory = null;
-                    category.AddToDatabase("ChangoMas");
+                    category.supermarket = Constants.ChangoMas;
+                    await category.AddToDatabase(_configuration);
                     products.AddRange(await GetProducts(category));
                 }
             }

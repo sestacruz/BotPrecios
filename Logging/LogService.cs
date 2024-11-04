@@ -1,16 +1,15 @@
-﻿using BotPrecios.Interfaces;
-using BotPrecios.Model;
+﻿using BotPrecios.Model;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 
-namespace BotPrecios.Helpers
+namespace BotPrecios.Logging
 {
-    internal class LogHelper : ILogHelper
+    public class LogService : ILogService
     {
         private readonly string _logPath;
         private static readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 
-        public LogHelper(string name)
+        public LogService(string name)
         {
             _logPath = ".\\Logs\\";
             if (!Directory.Exists(_logPath))

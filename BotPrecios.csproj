@@ -76,6 +76,7 @@
     <PackageReference Include="Dapper" Version="2.1.44" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
     <PackageReference Include="Selenium.WebDriver" Version="4.25.0" />
     <PackageReference Include="Supabase" Version="1.1.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace BotPrecios.Helpers
+namespace BotPrecios.Services
 {
     public static class Utilities
     {

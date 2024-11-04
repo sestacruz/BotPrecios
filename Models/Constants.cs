@@ -10,7 +10,7 @@ namespace BotPrecios.Model
     internal class Constants
     {
         internal const string Jumbo = "Jumbo";
-        internal const string ChangoMas = "ChangoMas";
+        internal const string ChangoMas ="ChangoMas";
         internal const string Carrefour = "Carrefour";
         internal const string Coto = "Coto";
 

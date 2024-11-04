@@ -1,105 +1,74 @@
 ﻿using BotPrecios.Bots;
-using BotPrecios.Helpers;
 using BotPrecios.Interfaces;
 using BotPrecios.Model;
+using BotPrecios.Logging;
+using BotPrecios.Services;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Win32;
+using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
+using Microsoft.Win32;
+using Microsoft.IdentityModel.Logging;
 
-string option = string.Empty, chromeVersion = string.Empty, lastCategory = string.Empty;
-LogHelper logger = new("General");
+var builder = new ServiceCollection();
 
-if (args.Length > 0)
-{
-    option = args[0];
-    lastCategory = args.Length > 1 ? args[1] : null;
-}
+// Configuración del logger
+builder.AddSingleton<ILogService, LogService>(sp => new LogService("General"));
 
-bool debug = false;
-#if DEBUG
-debug = true;
-#endif
+// Configuración del archivo de configuración
+var configurationBuilder = new ConfigurationBuilder();
+configurationBuilder.SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+IConfiguration config = configurationBuilder.Build();
+builder.AddSingleton<IConfiguration>(config);
 
-var builder = new ConfigurationBuilder();
-builder.SetBasePath(Directory.GetCurrentDirectory())
-   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+// Configuración de bots
+builder.AddSingleton<IBot, Jumbo>(sp =>
+    new Jumbo(
+        sp.GetRequiredService<ILogService>(),
+        sp.GetRequiredService<IConfiguration>(),
+        GetChromeVersion()
+    )
+);
+builder.AddSingleton<IBot, ChangoMas>(sp =>
+    new ChangoMas(
+        sp.GetRequiredService<ILogService>(),
+        sp.GetRequiredService<IConfiguration>(),
+        GetChromeVersion()
+    )
+);
+builder.AddSingleton<IBot, Carrefour>(sp =>
+    new Carrefour(
+        sp.GetRequiredService<ILogService>(),
+        sp.GetRequiredService<IConfiguration>(),
+        GetChromeVersion()
+    )
+);
+builder.AddSingleton<IBot, Coto>(sp =>
+    new Coto(
+        sp.GetRequiredService<ILogService>(),
+        sp.GetRequiredService<IConfiguration>(),
+        GetChromeVersion()
+    )
+);
 
-IConfiguration config = builder.Build();
 
-object path;
-path = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe", "", null);
-if (path != null)
-    chromeVersion = FileVersionInfo.GetVersionInfo(path.ToString()).FileVersion.Split('.')[0];
+// Configuración de servicios
+builder.AddSingleton<IStatisticsService, StatisticsService>();
+builder.AddSingleton<IPostsService, PostsService>();
 
-List<Product> products = [];
-IBot[] bots =
-    [
-        new Jumbo(new LogHelper(Constants.Jumbo),chromeVersion,lastCategory),
-        new ChangoMas(new LogHelper(Constants.ChangoMas),chromeVersion,lastCategory),
-        new Carrefour(new LogHelper(Constants.Carrefour),chromeVersion,lastCategory),
-        new Coto(new LogHelper(Constants.Coto),chromeVersion,lastCategory)
-    ];
+// Configuración del BotService
+builder.AddSingleton<IBotService, BotService>();
 
-if (!string.IsNullOrEmpty(option))
-{
-    var botsToDispose = bots.Where(b => option != b.GetType().Name || string.IsNullOrEmpty(option)).ToArray();
-    foreach (var bot in botsToDispose)
-        bot.Dispose();
-    bots = bots.Where(b => option == b.GetType().Name || string.IsNullOrEmpty(option)).ToArray();
-}
+var serviceProvider = builder.BuildServiceProvider();
 
-List<Task<List<Product>>> tasks = [];
-foreach (var bot in bots)
-{
-    await logger.ConsoleLog($"Inciando bot {bot.GetType().Name}");
-    tasks.Add(Task.Run( async () =>
-    {
-        await logger.ConsoleLog($"Obteniendo datos para {bot.GetType().Name}");
-        List<Product> botProducts = await bot.GetProductsData();
-        await logger.ConsoleLog($"Datos obtenidos para {bot.GetType().Name}. Disposing...");
-        bot.Dispose();
-        await logger.ConsoleLog($"Dispose completado para {bot.GetType().Name}");
-        return botProducts;
-    }));
-}
-
-await Task.WhenAll(tasks);
-products.AddRange(tasks.SelectMany(t => t.Result));
+// Obtención de argumentos
+var botService = serviceProvider.GetRequiredService<IBotService>();
+await botService.RunAsync(args);
 
 Console.WriteLine("Fin de la obtención de datos");
-Console.WriteLine(new string('-', 120));
 
-Console.WriteLine("Se obtuvieron los siguientes productos según las categorías:");
-List<Category> categories = Category.GetAllCategories();
-foreach (Category category in categories)
+static string GetChromeVersion()
 {
-    int cant = products.Count(p => p.category == category.name);
-    logger.ConsoleLog($"{category.name}: [{cant}]", foreColor: ConsoleColor.Cyan);
+    object path = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe", "", null);
+    return path != null ? FileVersionInfo.GetVersionInfo(path.ToString()).FileVersion.Split('.')[0] : string.Empty;
 }
-if (option == "statistics" || string.IsNullOrEmpty(option))
-{
-    List<CBA> CBAs = StatisticsHelper.GetCBAStatistics(logger);
-    logger.ConsoleLog(" ");
-    StatisticsHelper.GetTop5Products(logger,out List<CBA> topPositiveProd, out List<CBA> topNegativeProd, out List<CBA> categoriesVariation);
-    logger.ConsoleLog(" ");
-    StatisticsHelper.GetTop5Categories(logger, categoriesVariation, out List<CBA> topPositiveCat, out List<CBA> topNegativeCat);
-    logger.ConsoleLog(" ");
-    StatisticsHelper.GetMostsCBAs(logger, CBAs,out string expensive,out string cheapest);
-    if (!debug)
-    {
-        logger.ConsoleLog("Posteando en X");
-        string apiUrl = config["ApiURL"];
-        PostsHelper postsHelper = new(apiUrl);
-        postsHelper.PublishMontlyCBA(CBAs);
-        postsHelper.PublishTop5CheapestCategory(topPositiveCat);
-        postsHelper.PublishTop5MostExpensiveCategory(topNegativeCat);
-        postsHelper.PublishTop5CheapestProduct(topPositiveProd);
-        postsHelper.PublishTop5MostExpensiveProduct(topNegativeProd);
-        DateTime today = DateTime.Now;
-        DateTime lastDayOfMonth = new (today.Year,today.Month,DateTime.DaysInMonth(today.Year,today.Month));
-        if (today.Date == lastDayOfMonth.Date)
-            postsHelper.PublisTopMonthCBAs(expensive, cheapest);
-        logger.ConsoleLog("Posteos terminados");
-    }
-}
-

@@ -1,6 +1,6 @@
 ﻿using BotPrecios.Model;
 
-namespace BotPrecios.Interfaces
+namespace BotPrecios.Bots
 {
     public interface IBot
     {

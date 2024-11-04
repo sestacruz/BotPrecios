@@ -2,24 +2,27 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System.Text;
-using BotPrecios.Interfaces;
 using System.Text.RegularExpressions;
-using BotPrecios.Helpers;
+using Microsoft.Extensions.Configuration;
+using BotPrecios.Logging;
+using BotPrecios.Services;
 
 
 namespace BotPrecios.Bots
 {
     public class Carrefour : IDisposable,IBot
     {
+        private IConfiguration _configuration;
         private ChromeOptions _co;
         private IWebDriver driver;
         private bool cookiesAccepted = false;
         private const string _superMarket = Constants.Carrefour;
-        private readonly ILogHelper _log;
+        private readonly ILogService _log;
         private string _lastCategory;
 
-        internal Carrefour(ILogHelper log, string chromeVersion, string lastCategory = null)
+        public Carrefour(ILogService log, IConfiguration configuration, string chromeVersion, string lastCategory = null)
         {
+            _configuration = configuration; 
             _co = new() { BrowserVersion = chromeVersion };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
@@ -49,7 +52,8 @@ namespace BotPrecios.Bots
                 else
                 {
                     _lastCategory = null;
-                    category.AddToDatabase("Carrefour");
+                    category.supermarket = Constants.Carrefour;
+                    await category.AddToDatabase(_configuration);
                     products.AddRange(await GetProducts(category));
                 }
             }
@@ -98,7 +102,7 @@ namespace BotPrecios.Bots
 
         private async Task<List<Product>> GetProductsInfo(Category category, int productsCount)
         {
-            List<Product> products = new List<Product>();
+            List<Product> products = [];
             int pageCount = (int)Math.Round(decimal.Divide(productsCount,16),0,MidpointRounding.ToPositiveInfinity);
             int actualPage = 1;
             while (actualPage <= pageCount)

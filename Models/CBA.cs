@@ -1,6 +1,9 @@
-﻿using BotPrecios.Helpers;
+﻿using BotPrecios.Services;
 using Dapper;
+using Microsoft.Extensions.Configuration;
+using Supabase.Postgrest.Responses;
 using System.Data.SQLite;
+
 
 namespace BotPrecios.Model
 {
@@ -13,13 +16,46 @@ namespace BotPrecios.Model
         public int ProductCount { get; set; }
         public decimal Variation { get; set; }
 
-        public void GetAccumCBABySupermarket(string superMarket)
+        public async void GetAccumCBABySupermarket(IConfiguration configuration, string superMarket)
         {
             List<CBAData> CBAProducts = Utilities.LoadJSONFile<CBAData>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Categories\\{superMarket}CBAData.json"));
             this.SuperMarket = superMarket;
             CBA cbaYesterday = new() { SuperMarket = superMarket};
 
+            var options = new Supabase.SupabaseOptions
+            {
+                AutoConnectRealtime = false
+            };
+
+            var supabase = new Supabase.Client(configuration["SupabaseUrl"]!, configuration["SupabaseKey"], options);
+            await supabase.InitializeAsync();
+            ModeledResponse<Product> result;
+
+            List<Product> todayProducts = [];
+            List<Product> baseProducts = [];
             DateTime firstDay = new(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+            foreach (var cbaProduct in CBAProducts)
+            {
+                result = await supabase.From<Product>()
+                    .Select("Supermarket, SUM(price) as totalPrice, COUNT(*) as ProductCount")
+                    .Where(x => x.superMarket == superMarket)
+                    .Where(x => x.category == cbaProduct.category)
+                    .Where(x => x.priceDate.Equals(DateTime.Now))
+                    .Filter(x => x.name, Supabase.Postgrest.Constants.Operator.In, cbaProduct.names)
+                    .Get();
+                todayProducts.AddRange([.. result.Models]);    
+
+                result = await supabase.From<Product>()
+                    .Select("Supermarket, SUM(price) as totalPrice, COUNT(*) as ProductCount")
+                    .Where(x => x.superMarket == superMarket)
+                    .Where(x => x.category == cbaProduct.category)
+                    .Where(x => x.priceDate.Equals(firstDay))
+                    .Filter(x => x.name, Supabase.Postgrest.Constants.Operator.In, cbaProduct.names)
+                    .Get();
+                baseProducts.AddRange([.. result.Models]);
+            }
+
             string sql = "SELECT Supermarket,SUM(price) as totalPrice, COUNT(*) as ProductCount FROM Products " +
                          "WHERE Supermarket = @superMarket " +
                          "AND Name IN @names " +

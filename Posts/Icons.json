@@ -1,19 +1,19 @@
 {
   "supermakets": [
     {
-      "name": "Coto",
+      "name": Constants.Coto,
       "icon": "🔴"
     },
     {
-      "name": "Jumbo",
+      "name": Constants.Jumbo,
       "icon": "🟢"
     },
     {
-      "name": "Carrefour",
+      "name": Constants.Carrefour,
       "icon": "🔵"
     },
     {
-      "name": "ChangoMas",
+      "name": Constants.ChangoMas,
       "icon": "🟡"
     }
   ],

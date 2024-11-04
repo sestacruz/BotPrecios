@@ -2,24 +2,27 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System.Text;
-using BotPrecios.Interfaces;
 using System.Text.RegularExpressions;
-using BotPrecios.Helpers;
+using BotPrecios.Services;
 using OpenQA.Selenium.Interactions;
+using Microsoft.Extensions.Configuration;
+using BotPrecios.Logging;
 
 
 namespace BotPrecios.Bots
 {
     public class Coto : IDisposable, IBot
     {
+        private IConfiguration _configuration;
         private ChromeOptions _co;
         private IWebDriver driver;
         private const string _superMarket = Constants.Coto;
-        private readonly ILogHelper _log;
+        private readonly ILogService _log;
         private string _lastCategory;
 
-        internal Coto(ILogHelper log, string chromeVersion,string lastCategory = null)
+        internal Coto(ILogService log, IConfiguration configuration, string chromeVersion,string lastCategory = null)
         {
+            _configuration = configuration;
             _co = new() { BrowserVersion = chromeVersion };
             _co.AddArgument("--start-maximized");
             _co.AddArgument("--log-level=3");
@@ -48,7 +51,8 @@ namespace BotPrecios.Bots
                 else
                 {
                     _lastCategory = null;
-                    category.AddToDatabase("Coto");
+                    category.supermarket = Constants.Coto;
+                    await category.AddToDatabase(_configuration);
                     products.AddRange(await GetProducts(category));
                 }
             }
